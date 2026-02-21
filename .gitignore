@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pub-cache/
+packages/api/node_modules/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# Build outputs
+dist/
+build/
+packages/api/dist/
+apps/mobile/build/
+*.js.map
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Prisma
+packages/api/node_modules/.prisma/
+
+# Flutter
+apps/mobile/.dart_tool/
+apps/mobile/.packages
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+
+# Misc
+*.tgz
+.cache/

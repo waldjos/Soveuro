@@ -1,0 +1,9 @@
+# Soveuro — Reglas del proyecto
+
+- No romper el build. Cada cambio debe compilar (backend: npm run build, mobile: flutter build).
+- No hardcodear secretos: usar variables de entorno y archivos de config.
+- Validaciones con class-validator y pipes globales en NestJS.
+- Errores consistentes con HTTP status correctos.
+- No imprimir tokens ni contraseñas en logs.
+- Endpoints documentados en Swagger y resumidos en docs/API.md.
+- Estructura: apps/mobile (Flutter), packages/api (NestJS), infra/docker, docs/.
