@@ -1,0 +1,42 @@
+# Compila Flutter web y despliega en Vercel al hacer push a main.
+# Secretos necesarios en GitHub: API_BASE_URL, VERCEL_TOKEN (y opcional: VERCEL_ORG_ID, VERCEL_PROJECT_ID)
+
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: "3.24.0"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Get packages
+        working-directory: apps/mobile
+        run: flutter pub get
+
+      - name: Build web
+        working-directory: apps/mobile
+        run: flutter build web --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: apps/mobile/build/web
+          vercel-args: "--prod"
