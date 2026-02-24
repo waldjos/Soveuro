@@ -1,0 +1,26 @@
+# Render Blueprint - Backend API (NestJS)
+# Root Directory debe ser packages/api para que build y start funcionen
+
+services:
+  - type: web
+    name: soveuro
+    runtime: node
+    region: oregon
+
+    # CRÍTICO: Apuntar al paquete API del monorepo
+    rootDir: packages/api
+
+    buildCommand: npm install && npm run build
+    startCommand: npx prisma migrate deploy && npm run start:prod
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
