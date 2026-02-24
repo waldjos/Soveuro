@@ -1,5 +1,18 @@
 # Ver la app en Vercel (diseño y funciones)
 
+## Si ves "404: NOT_FOUND" en soveuro-xxx.vercel.app
+
+Ese error aparece cuando Vercel está sirviendo la **raíz del repo** (o la carpeta `apps/mobile`) en lugar del **sitio ya compilado**. En el repo no hay un `index.html` listo para web; ese archivo se genera al ejecutar `flutter build web` y queda en `apps/mobile/build/web`.
+
+**Solución:** desplegar siempre la carpeta **compilada** `apps/mobile/build/web`, no el repo ni `apps/mobile`:
+
+1. En tu PC: `cd apps\mobile` → `flutter build web --dart-define=API_BASE_URL=https://tu-api...`
+2. Luego: `cd build\web` → `vercel --prod` (o subir esa carpeta en vercel.com).
+
+Si conectaste el proyecto de Vercel a GitHub con "Root Directory" = vacío o `apps/mobile`, **no** se puede usar así para Flutter (Vercel no compila Flutter). Tienes que desplegar desde `build/web` como en el paso anterior, o usar el GitHub Action que compila y despliega esa carpeta.
+
+---
+
 Para ver en el navegador cómo quedó el diseño y probar las funciones necesitas:
 
 1. **API en línea** (Railway) para que login, doctores, eventos y perfil funcionen.
@@ -46,9 +59,10 @@ Se genera la carpeta `build\web`.
 ### Opción A: Vercel desde la carpeta compilada (recomendado)
 
 1. Instala Vercel CLI (una vez): `npm i -g vercel`
-2. Entra en la carpeta compilada y despliega:
+2. Después de `flutter build web`, copia la config de Vercel y despliega:
 
 ```powershell
+copy apps\mobile\vercel.json apps\mobile\build\web\vercel.json
 cd apps\mobile\build\web
 vercel --prod
 ```

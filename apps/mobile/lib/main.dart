@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/config/env.dart';
-import 'core/http/dio_client.dart';
-import 'core/storage/token_storage.dart';
 import 'app_router.dart';
 
 void main() {

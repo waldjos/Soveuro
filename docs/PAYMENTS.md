@@ -1,38 +1,46 @@
-# Soveuro — Arquitectura de pagos (MVP)
+# Soveuro — Pagos (IAP implementado)
 
-El MVP deja la sección de pagos como **placeholder** en la app y el estado de suscripción se obtiene de `GET /me` (campo `subscription`).
+Pagos por suscripción con **In-App Purchases** (Apple / Google). La compra se valida siempre en el backend.
 
-## Objetivo futuro
-- **IAP**: Apple App Store y Google Play (compras in-app).
-- **Opcional**: Stripe para pagos web o complementarios.
+## Estado actual
 
-## Modelo ya existente
-- Tabla **Subscription**: `userId`, `provider` (APPLE | GOOGLE | STRIPE), `status`, `planId`, `expiresAt`, `externalRef`.
-- El cliente muestra el estado en la pantalla Pagos usando los datos de `/me`.
+- **Backend**: `POST /payments/verify` (JWT requerido). Verificación Apple (App Store Server API), Google (Play Developer API) o **modo stub** si no hay credenciales.
+- **Flutter**: Pantalla Pagos con estado desde `/me.subscription`, listado de productos, botón “Suscribirme” (IAP) y “Restaurar compras”. Tras compra se envía receipt/purchaseToken al backend y se refresca `/me`.
+- **Modelo**: Tabla `Subscription` con upsert por `userId`; `status` (ACTIVE, EXPIRED, CANCELLED, PENDING), `planId`, `expiresAt`, `externalRef`.
 
-## Flujo previsto (sin implementar aún)
+## Flujo
 
 1. **Cliente (Flutter)**  
-   - Usar paquetes oficiales: `in_app_purchase` (Flutter) para Apple/Google.  
-   - Tras compra exitosa, enviar el token o recibo al backend.
+   - Usa `in_app_purchase`. Tras compra exitosa envía a `POST /payments/verify`: `provider`, `planId`, `productId` y `receipt` (Apple) o `purchaseToken` (Google).
 
 2. **Backend (NestJS)**  
-   - Endpoint tipo `POST /payments/verify` que reciba:  
-     - `provider`: APPLE | GOOGLE  
-     - `receipt` o `purchaseToken` (según plataforma)  
-     - `planId`  
-   - Validar el recibo con Apple/Google APIs (servidor a servidor).  
-   - Crear o actualizar **Subscription** y devolver estado.
+   - Valida con Apple o Google (o modo stub con `PAYMENTS_STUB=true`).  
+   - Crea o actualiza `Subscription` por `userId` y devuelve el estado.
 
-3. **Stripe (opcional)**  
-   - Webhook para `checkout.session.completed` (o equivalente).  
-   - Crear/actualizar **Subscription** con `provider: STRIPE` y `externalRef` = id de Stripe.
+3. **UI**  
+   - Estado de suscripción en Pantalla Pagos y en `/me` (perfil).
 
 ## Seguridad
-- No confiar solo en el cliente: siempre validar compras en el backend con Apple/Google.  
-- No guardar datos de tarjeta en nuestro servidor; Stripe/Apple/Google los manejan.  
-- Guardar solo `externalRef`, `planId`, `expiresAt` y `status` en nuestra DB.
 
-## Resumen
-- **MVP**: UI de pagos + lectura de `subscription` desde `/me`.  
-- **Siguiente paso**: Implementar verificación de recibos IAP en el backend y cliente con `in_app_purchase`.
+- **Nunca confiar en el cliente**: toda compra se valida en el backend con Apple/Google (o stub en desarrollo).
+- No guardar secretos en código: variables de entorno y `ConfigService`.
+
+## Variables de entorno y verificación manual
+
+Variables necesarias, modo stub y script de verificación manual con `curl` están en:
+
+- **[packages/api/docs/PAYMENTS.md](../packages/api/docs/PAYMENTS.md)**
+
+Resumen de variables:
+
+| Variable | Uso |
+|----------|-----|
+| `PAYMENTS_STUB` | `true` = modo stub (ACTIVE 7 días). Sin credenciales reales usar `true`. |
+| `APPLE_SHARED_SECRET`, `APPLE_BUNDLE_ID` | Apple (solo si `PAYMENTS_STUB=false`). |
+| `GOOGLE_PACKAGE_NAME`, `GOOGLE_SERVICE_ACCOUNT_JSON` | Google (solo si `PAYMENTS_STUB=false`). |
+
+## Comandos
+
+- **Backend**: `cd packages/api && npm run start:dev`
+- **App**: `cd apps/mobile && flutter run`
+- **Swagger**: http://localhost:3000/docs

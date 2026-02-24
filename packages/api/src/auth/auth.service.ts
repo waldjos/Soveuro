@@ -72,10 +72,15 @@ export class AuthService {
   }
 
   private async issueTokens(user: { id: string; email: string; role: Role }) {
-    const accessSecret = this.config.get<string>('JWT_ACCESS_SECRET');
+    const accessSecret =
+      this.config.get<string>('JWT_ACCESS_SECRET') ?? this.config.get<string>('JWT_SECRET');
     const refreshSecret = this.config.get<string>('JWT_REFRESH_SECRET');
-    const accessExpires = this.config.get<string>('JWT_ACCESS_EXPIRES_IN') ?? '15m';
-    const refreshExpires = this.config.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
+    const accessExpires =
+      this.config.get<string>('JWT_ACCESS_EXPIRES_IN') ??
+      this.config.get<string>('JWT_EXPIRES_IN') ??
+      '15m';
+    const refreshExpires =
+      this.config.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
 
     const accessToken = this.jwt.sign(
       { sub: user.id, email: user.email, role: user.role, type: 'access' },

@@ -40,6 +40,7 @@ export class UsersService {
             status: user.subscription.status,
             planId: user.subscription.planId ?? undefined,
             expiresAt: user.subscription.expiresAt?.toISOString(),
+            externalRef: user.subscription.externalRef ?? undefined,
           }
         : undefined,
     };

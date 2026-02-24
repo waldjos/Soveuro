@@ -39,6 +39,8 @@ class SubscriptionDto {
   planId?: string;
   @ApiProperty({ required: false })
   expiresAt?: string;
+  @ApiProperty({ required: false })
+  externalRef?: string;
 }
 
 export class MeResponseDto {

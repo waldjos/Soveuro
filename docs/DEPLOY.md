@@ -1,118 +1,164 @@
-# Desplegar Soveuro para visualizar el sistema
+# Desplegar Soveuro (Backend NestJS en Render / Railway)
 
-Para ver en la nube lo que creamos necesitas desplegar:
-1. **Backend + base de datos** (API NestJS + Postgres)
-2. **App web** (Flutter compilado para web, opcional)
-
-**Opción rápida solo para ver la API:** despliega solo el backend en Railway; cuando esté en línea podrás abrir `https://tu-api.up.railway.app/docs` en el navegador y probar register, login, doctores y eventos desde Swagger.
-
-Opciones gratuitas o con tier free: **Railway** (API + Postgres) y **Vercel** (app Flutter web).
+Backend listo para despliegue con Postgres administrado y Prisma. El servidor escucha en **puerto dinámico** (`PORT`); la configuración es por **variables de entorno** con `@nestjs/config`.
 
 ---
 
-## 1. Backend + Postgres en Railway
+## Variables de entorno (obligatorias)
 
-[Railway](https://railway.app) ofrece Postgres y despliegue de Node en un mismo proyecto (tier free limitado).
+Configurar en el panel de Render/Railway (o en `.env` en local):
 
-### Pasos
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `DATABASE_URL` | URL de PostgreSQL (Render/Railway la proveen si usas su Postgres) | `postgresql://user:pass@host:5432/dbname` |
+| `JWT_SECRET` | Secreto para tokens de acceso (string largo aleatorio) | Generar en [randomkeygen.com](https://randomkeygen.com) |
+| `JWT_EXPIRES_IN` | Expiración del access token | `15m` |
+| `JWT_REFRESH_SECRET` | Secreto para refresh tokens (otro string aleatorio) | Idem |
+| `JWT_REFRESH_EXPIRES_IN` | Expiración del refresh token | `7d` |
+| `CORS_ORIGIN` | Orígenes permitidos, separados por coma (sin espacios o con espacios, se recortan) | `https://tu-app.vercel.app,https://otro.dominio.com` |
 
-1. **Cuenta**: entra en [railway.app](https://railway.app) y regístrate (GitHub recomendado).
+Opcionales:
 
-2. **Nuevo proyecto**  
-   - "New Project" → "Deploy from GitHub repo" (conecta el repo donde está `soveuro`)  
-   **O** "Empty Project" y luego subir el código manualmente o con CLI.
+| Variable | Descripción | Por defecto |
+|----------|-------------|-------------|
+| `PORT` | Puerto en el que escucha la API | `3000` (Render/Railway suelen inyectarlo) |
+| `NODE_ENV` | `production` en prod | - |
+| `SWAGGER_ENABLED` | Si es `true`, habilita `/docs` también en producción | En prod Swagger está desactivado salvo que sea `true` |
 
-3. **Postgres**  
-   - En el proyecto: "New" → "Database" → "PostgreSQL".  
-   - Railway crea la base y te da una variable `DATABASE_URL`. Cópiala.
-
-4. **Servicio API**  
-   - "New" → "GitHub Repo" (o "Empty Service" y configurar después).  
-   - Elige el repo y **Root Directory** pon: `packages/api` (o la ruta donde está el `package.json` del backend).  
-   - En "Variables" agrega:
-     - `DATABASE_URL` = la URL que te dio Postgres (ej. `postgresql://postgres:xxx@xxx.railway.app:5432/railway`)
-     - `JWT_ACCESS_SECRET` = un string largo y aleatorio (ej. genera uno en [randomkeygen.com](https://randomkeygen.com))
-     - `JWT_REFRESH_SECRET` = otro string largo y aleatorio
-     - `JWT_ACCESS_EXPIRES_IN` = `15m`
-     - `JWT_REFRESH_EXPIRES_IN` = `7d`
-   - **Build command**: `npm install && npx prisma generate && npx prisma migrate deploy && npm run build`  
-   - **Start command**: `npm run start:prod`  
-   - **Root Directory**: debe ser la carpeta que contiene `package.json` y `prisma/` (ej. `packages/api` si el repo es el monorepo).
-
-5. **Migraciones y seed**  
-   - En Railway, en el servicio de la API, abre "Settings" → "Deploy" o la pestaña de consola.  
-   - O en local, con la misma `DATABASE_URL` que usa Railway:
-     ```bash
-     cd packages/api
-     set DATABASE_URL=postgresql://...  # la URL de Railway
-     npx prisma migrate deploy
-     npm run seed
-     ```
-   Así la base en Railway tendrá tablas y datos de prueba.
-
-6. **URL de la API**  
-   - En el servicio API, Railway asigna un dominio tipo `tu-api.up.railway.app`.  
-   - Activa "Generate Domain" si no lo tiene. Esa será tu **API_BASE_URL** (ej. `https://tu-api.up.railway.app`).
-
-7. **CORS (para la app web)**  
-   - En Variables del servicio API añade:  
-     `CORS_ORIGIN` = `https://tu-app.vercel.app`  
-   (o la URL que tenga la app Flutter cuando la despliegues; si quieres permitir todo en desarrollo usa `*` solo para pruebas).
+La API usa **solo** estas variables (y las de pagos si aplica); no se guardan secretos en código. **No loguear** en producción tokens, `Authorization` ni cuerpos con contraseñas (el código actual no lo hace).
 
 ---
 
-## 2. App Flutter (web) en Vercel
+## Comandos exactos
 
-Así puedes **visualizar la app en el navegador** usando la API desplegada en Railway.
+### Local (desarrollo)
 
-### Compilar Flutter para web
+1. Base de datos con Docker:
+   ```bash
+   cd infra/docker
+   docker compose up -d
+   ```
+2. Desde la raíz del monorepo (o desde `packages/api`):
+   ```bash
+   cd packages/api
+   cp .env.example .env
+   npm install
+   npx prisma migrate dev
+   npm run start:dev
+   ```
+   - Migraciones en local: `npm run prisma:migrate:dev` (equivale a `prisma migrate dev`).
+   - API: http://localhost:3000  
+   - Health: http://localhost:3000/health  
+   - Swagger (solo en dev): http://localhost:3000/docs  
 
-En tu máquina, con la URL del backend de Railway:
+### Producción (Render / Railway)
+
+1. **Build** (lo que debe ejecutar el servicio en el paso *Build*):
+   ```bash
+   npm install
+   npm run build
+   ```
+   - `postinstall` ya ejecuta `prisma generate` tras `npm install`.
+
+2. **Migraciones** (ejecutar **antes** del start en el primer deploy o en un paso separado):
+   ```bash
+   npx prisma migrate deploy
+   ```
+   En el `package.json` está el script: `npm run prisma:migrate` → `prisma migrate deploy`.
+
+3. **Start** (comando de inicio del servicio):
+   ```bash
+   npm run start:prod
+   ```
+   Equivale a `node dist/main.js` y usa `process.env.PORT || 3000`.
+
+Resumen prod: **Build** = `npm install && npm run build`. **Start** = `npm run prisma:migrate && npm run start:prod` (o ejecutar `prisma migrate deploy` en un release step y luego solo `npm run start:prod`).
+
+---
+
+## Render
+
+1. **Nuevo Web Service** → Conectar repo GitHub (monorepo).
+2. **Root Directory**: `packages/api`.
+3. **Runtime**: Node.
+4. **Build Command**:
+   ```bash
+   npm install && npm run build
+   ```
+5. **Start Command**:
+   ```bash
+   npx prisma migrate deploy && npm run start:prod
+   ```
+   (O en Render: añadir un "Release Command" `npx prisma migrate deploy` y en Start solo `npm run start:prod` si lo soporta.)
+6. **Variables**: Añadir todas las de la tabla anterior (`DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `JWT_REFRESH_SECRET`, `JWT_REFRESH_EXPIRES_IN`, `CORS_ORIGIN`). `PORT` lo asigna Render.
+7. **Postgres**: Crear base de datos Postgres en Render y usar la `DATABASE_URL` que proporciona.
+
+---
+
+## Railway
+
+1. **New Project** → Deploy from GitHub repo (monorepo).
+2. **Root Directory**: `packages/api`.
+3. **Build Command**:
+   ```bash
+   npm install && npm run build
+   ```
+4. **Start Command**:
+   ```bash
+   npx prisma migrate deploy && npm run start:prod
+   ```
+5. **Variables**: Igual que en Render. Si añades el addon Postgres de Railway, se inyecta `DATABASE_URL` automáticamente.
+6. **Dominio**: Generate Domain en el servicio para obtener la URL pública (ej. `https://tu-api.up.railway.app`).
+
+---
+
+## Health check
+
+- **GET** `/health` → `{ "status": "ok" }`  
+Útil para load balancers y monitoreo. No requiere autenticación.
+
+---
+
+## Seed (opcional)
+
+Para datos de prueba en la base desplegada (ejecutar una vez, con la misma `DATABASE_URL` de prod):
 
 ```bash
-cd soveuro/apps/mobile
-flutter pub get
-flutter build web --dart-define=API_BASE_URL=https://TU-API.up.railway.app
+cd packages/api
+# Usar DATABASE_URL de Render/Railway
+npm run seed
 ```
 
-Se genera la carpeta `build/web`. Esa carpeta es la que desplegarás.
-
-### Desplegar en Vercel
-
-1. Entra en [vercel.com](https://vercel.com) y conecta tu repo (o instala [Vercel CLI](https://vercel.com/cli)).
-2. **Import Project** → elige el repo de Soveuro.
-3. Configuración:
-   - **Root Directory**: `apps/mobile`
-   - **Build Command**:  
-     `flutter pub get && flutter build web --dart-define=API_BASE_URL=https://TU-API.up.railway.app`  
-     (sustituye por tu URL real de Railway.)
-   - **Output Directory**: `build/web`
-   - **Install Command**: si Vercel no tiene Flutter, en "Framework Preset" elige "Other" y asegúrate de tener Flutter instalado en el entorno (o usa un Docker/script que instale Flutter).
-
-**Nota:** Vercel no incluye Flutter por defecto. Opciones:
-
-- **Opción A – Build local + solo subir `build/web`**:  
-  Ejecuta `flutter build web` en local (como arriba) y despliega solo la carpeta `build/web` como sitio estático (Vercel → "Import" → subir carpeta, o conecta un repo donde tengas solo los archivos de `build/web` en una rama).
-- **Opción B – Netlify**:  
-  Netlify permite configurar un comando de build; si tienes Flutter en CI (p. ej. GitHub Actions que ejecute `flutter build web` y suba `build/web`), puedes usar ese artefacto en Netlify.
-- **Opción C – Firebase Hosting**:  
-  `firebase init hosting` → directorio público `build/web`; después de `flutter build web`, `firebase deploy`.
-
-Para **visualizar rápido** sin configurar CI: haz el build en local y despliega la carpeta `build/web` en Vercel (upload) o en Netlify (drag & drop de `build/web`).
+No es obligatorio para el deploy.
 
 ---
 
-## 3. Resumen rápido
+## Resumen rápido
 
-| Qué              | Dónde   | Resultado                          |
-|------------------|---------|------------------------------------|
-| API + Postgres   | Railway | `https://tu-api.up.railway.app`    |
-| App web (Flutter)| Vercel / Netlify / Firebase | URL tipo `https://soveuro.vercel.app` |
+| Entorno | Migraciones | Arranque |
+|---------|-------------|----------|
+| Local | `npx prisma migrate dev` o `npm run prisma:migrate:dev` | `npm run start:dev` |
+| Prod | `npm run prisma:migrate` (`prisma migrate deploy`) | `npm run start:prod` |
 
-1. Despliega API en Railway y anota la URL.  
-2. Ejecuta migraciones y seed contra la `DATABASE_URL` de Railway.  
-3. `flutter build web --dart-define=API_BASE_URL=https://tu-api.up.railway.app`  
-4. Sube `apps/mobile/build/web` a Vercel/Netlify/Firebase.  
-5. En el backend, pon `CORS_ORIGIN` = URL de tu app web.  
+| Qué | Dónde | Resultado |
+|-----|--------|-----------|
+| API + Postgres | Render o Railway | `https://tu-api.onrender.com` o `https://tu-api.up.railway.app` |
+| Health | Cualquiera | `GET /health` → `{ "status": "ok" }` |
+| Swagger | Solo si `SWAGGER_ENABLED=true` en prod | `GET /docs` |
 
-Así puedes abrir la URL de la app en el navegador y ver el sistema (login, doctores, eventos, perfil) usando la API desplegada.
+---
+
+## App Flutter (web) en Vercel
+
+Para ver la app en el navegador usando la API desplegada:
+
+1. Build con la URL del backend:
+   ```bash
+   cd apps/mobile
+   flutter pub get
+   flutter build web --dart-define=API_BASE_URL=https://TU-API.onrender.com
+   ```
+2. Desplegar la carpeta `build/web` en Vercel (u otro host estático).
+3. En el backend, configurar `CORS_ORIGIN` con la URL de la app (ej. `https://tu-app.vercel.app`).
+
+Vercel no incluye Flutter por defecto; suele hacerse el build en local o en CI y desplegar solo `build/web`.
