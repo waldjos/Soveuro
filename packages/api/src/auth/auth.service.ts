@@ -6,6 +6,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Role } from '../common/enums/role.enum';
+import { AuditEventType } from '@prisma/client';
 
 const BCRYPT_ROUNDS = 10;
 
@@ -35,6 +36,15 @@ export class AuthService {
       include: { profile: true },
     });
 
+    await this.prisma.auditEvent
+      .create({
+        data: {
+          type: AuditEventType.REGISTER_SUCCESS,
+          userId: user.id,
+        },
+      })
+      .catch(() => {});
+
     return this.issueTokens(user);
   }
 
@@ -47,6 +57,15 @@ export class AuthService {
 
     const valid = await bcrypt.compare(dto.password, user.passwordHash);
     if (!valid) throw new UnauthorizedException('Invalid credentials');
+
+    await this.prisma.auditEvent
+      .create({
+        data: {
+          type: AuditEventType.LOGIN_SUCCESS,
+          userId: user.id,
+        },
+      })
+      .catch(() => {});
 
     return this.issueTokens(user);
   }

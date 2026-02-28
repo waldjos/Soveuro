@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as express from 'express';
+import * as path from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -37,6 +39,10 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document);
   }
+
+  // MVP: servir uploads desde disco local.
+  // Nota: en algunos entornos el disco es efímero; luego migraremos a S3/R2/Cloudinary.
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

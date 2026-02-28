@@ -9,10 +9,20 @@ export class UsersService {
   async me(userId: string): Promise<MeResponseDto> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { profile: true, doctor: true, subscription: true },
+      include: { profile: true, doctor: true, subscription: true, doctorApplication: true },
     });
     if (!user) throw new NotFoundException('User not found');
     if (!user.profile) throw new NotFoundException('Profile not found');
+
+    const fees = await this.prisma.fee.findMany({
+      where: { userId },
+      select: { kind: true, status: true, amountCents: true, currency: true },
+    });
+    const currency = fees.find((f) => f.currency)?.currency ?? 'USD';
+    const sum = (kind: string, status: string) =>
+      fees
+        .filter((f) => f.kind === kind && f.status === status)
+        .reduce((acc, f) => acc + (f.amountCents ?? 0), 0);
 
     return {
       user: { id: user.id, email: user.email, role: user.role },
@@ -43,6 +53,32 @@ export class UsersService {
             externalRef: user.subscription.externalRef ?? undefined,
           }
         : undefined,
+      doctorApplication: user.doctorApplication
+        ? {
+            id: user.doctorApplication.id,
+            status: user.doctorApplication.status,
+            phone: user.doctorApplication.phone ?? undefined,
+            nationalId: user.doctorApplication.nationalId ?? undefined,
+            location: user.doctorApplication.location ?? undefined,
+            doctorType: user.doctorApplication.doctorType ?? undefined,
+            specialty: user.doctorApplication.specialty ?? undefined,
+            subspecialty: user.doctorApplication.subspecialty ?? undefined,
+            avatarUrl: user.doctorApplication.avatarUrl ?? undefined,
+            createdAt: user.doctorApplication.createdAt.toISOString(),
+            updatedAt: user.doctorApplication.updatedAt.toISOString(),
+          }
+        : undefined,
+      feesSummary: {
+        currency,
+        colegiatura: {
+          paidCents: sum('COLEGIATURA', 'PAID'),
+          pendingCents: sum('COLEGIATURA', 'PENDING'),
+        },
+        congresos: {
+          paidCents: sum('CONGRESO', 'PAID'),
+          pendingCents: sum('CONGRESO', 'PENDING'),
+        },
+      },
     };
   }
 }

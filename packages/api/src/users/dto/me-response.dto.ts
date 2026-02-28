@@ -43,6 +43,47 @@ class SubscriptionDto {
   externalRef?: string;
 }
 
+class DoctorApplicationDto {
+  @ApiProperty()
+  id: string;
+  @ApiProperty({ enum: ['PENDING', 'APPROVED', 'REJECTED'] })
+  status: string;
+  @ApiProperty({ required: false })
+  phone?: string;
+  @ApiProperty({ required: false })
+  nationalId?: string;
+  @ApiProperty({ required: false })
+  location?: string;
+  @ApiProperty({ required: false, enum: ['RESIDENT', 'UROLOGIST', 'OTHER'] })
+  doctorType?: string;
+  @ApiProperty({ required: false })
+  specialty?: string;
+  @ApiProperty({ required: false })
+  subspecialty?: string;
+  @ApiProperty({ required: false })
+  avatarUrl?: string;
+  @ApiProperty()
+  createdAt: string;
+  @ApiProperty()
+  updatedAt: string;
+}
+
+class FeeSummaryLineDto {
+  @ApiProperty()
+  paidCents: number;
+  @ApiProperty()
+  pendingCents: number;
+}
+
+class FeesSummaryDto {
+  @ApiProperty()
+  currency: string;
+  @ApiProperty()
+  colegiatura: FeeSummaryLineDto;
+  @ApiProperty()
+  congresos: FeeSummaryLineDto;
+}
+
 export class MeResponseDto {
   @ApiProperty()
   user: { id: string; email: string; role: string };
@@ -52,4 +93,8 @@ export class MeResponseDto {
   doctor?: DoctorDto;
   @ApiProperty({ required: false })
   subscription?: SubscriptionDto;
+  @ApiProperty({ required: false })
+  doctorApplication?: DoctorApplicationDto;
+  @ApiProperty()
+  feesSummary: FeesSummaryDto;
 }

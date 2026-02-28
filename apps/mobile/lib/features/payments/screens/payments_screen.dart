@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import '../../profile/providers/profile_provider.dart';
-import '../providers/payments_provider.dart';
+import '../../../shared/widgets/svu_app_bar.dart';
 
 class PaymentsScreen extends ConsumerWidget {
   const PaymentsScreen({super.key});
@@ -10,185 +9,192 @@ class PaymentsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final me = ref.watch(meProvider);
-    final productsAsync = ref.watch(productsProvider);
-    final message = ref.watch(paymentsMessageProvider);
-    final controller = ref.read(paymentsControllerProvider);
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pagos')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Icon(Icons.payment, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text('Suscripción', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(
-              'Gestiona tu suscripción con compras integradas (Apple / Google).',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 24),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Estado de suscripción', style: Theme.of(context).textTheme.titleSmall),
-                    const SizedBox(height: 8),
-                    me.when(
-                      data: (data) {
-                        final sub = data != null ? data['subscription'] as Map<String, dynamic>? : null;
-                        if (sub == null) {
-                          return const Text('Sin suscripción activa.');
-                        }
-                        final status = sub['status'] as String? ?? '-';
-                        final isActive = status == 'ACTIVE';
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Proveedor: ${sub['provider'] ?? '-'}'),
-                            Text('Estado: $status', style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: isActive ? Colors.green : null,
-                            )),
-                            if (sub['planId'] != null) Text('Plan: ${sub['planId']}'),
-                            if (sub['expiresAt'] != null) Text('Vence: ${sub['expiresAt']}'),
-                          ],
-                        );
-                      },
-                      loading: () => const Padding(
-                        padding: EdgeInsets.all(8),
-                        child: SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2)),
-                      ),
-                      error: (_, __) => const Text('No se pudo cargar.'),
-                    ),
-                  ],
-                ),
+      appBar: const SvuAppBar(title: 'Pagos'),
+      body: me.when(
+        data: (data) {
+          final summary = (data?['feesSummary'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
+          final currency = (summary['currency'] ?? 'USD').toString();
+          final coleg = (summary['colegiatura'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
+          final cong = (summary['congresos'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
+          final colegPaid = (coleg['paidCents'] ?? 0) as int;
+          final colegPending = (coleg['pendingCents'] ?? 0) as int;
+          final congPaid = (cong['paidCents'] ?? 0) as int;
+          final congPending = (cong['pendingCents'] ?? 0) as int;
+
+          String money(int cents) => '${(cents / 100).toStringAsFixed(2)} $currency';
+
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            children: [
+              Text('Colegiatura', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+              const SizedBox(height: 10),
+              _SummaryCard(
+                colegPaid: money(colegPaid),
+                colegPending: money(colegPending),
+                congPaid: money(congPaid),
+                congPending: money(congPending),
               ),
-            ),
-            if (message != null) ...[
-              const SizedBox(height: 16),
-              _MessageBanner(message: message),
-            ],
-            const SizedBox(height: 24),
-            Text('Planes disponibles', style: Theme.of(context).textTheme.titleSmall),
-            const SizedBox(height: 8),
-            productsAsync.when(
-              data: (products) {
-                if (products.isEmpty) {
-                  return const Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text('No hay productos configurados o la tienda no está disponible.'),
-                    ),
-                  );
-                }
-                return Column(
-                  children: products.map((p) => _ProductTile(
-                    product: p,
-                    onSubscribe: () {
-                      ref.read(paymentsMessageProvider.notifier).state = 'loading';
-                      controller.purchase(p);
-                    },
-                  )).toList(),
-                );
-              },
-              loading: () => const Padding(
-                padding: EdgeInsets.all(16),
-                child: Center(child: CircularProgressIndicator()),
+              const SizedBox(height: 14),
+              Text(
+                'Nota',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
               ),
-              error: (e, _) => Card(
+              const SizedBox(height: 8),
+              _SoftCard(
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text('Error al cargar productos: $e'),
+                  padding: const EdgeInsets.all(14),
+                  child: Text(
+                    'El monto de tu colegiatura y el pago de tus inscripciones a congresos se verán reflejadas en este renglón.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurface.withValues(alpha: 0.75)),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
-              onPressed: () async {
-                ref.read(paymentsMessageProvider.notifier).state = 'loading';
-                await controller.restorePurchases();
-                ref.read(paymentsMessageProvider.notifier).state = 'success';
-                ref.invalidate(meProvider);
-              },
-              icon: const Icon(Icons.restore),
-              label: const Text('Restaurar compras'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MessageBanner extends StatelessWidget {
-  const _MessageBanner({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final isError = message.startsWith('error:');
-    final isSuccess = message == 'success';
-    return Material(
-      color: isError ? Colors.red.shade100 : (isSuccess ? Colors.green.shade100 : Colors.blue.shade100),
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            Icon(
-              isError ? Icons.error_outline : (isSuccess ? Icons.check_circle_outline : Icons.hourglass_empty),
-              color: isError ? Colors.red : (isSuccess ? Colors.green : Colors.blue),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                isError ? message : (isSuccess ? 'Suscripción activada.' : 'Completa la compra en la ventana que se abrió.'),
-                style: TextStyle(color: isError ? Colors.red.shade900 : (isSuccess ? Colors.green.shade900 : Colors.blue.shade900)),
+              const SizedBox(height: 18),
+              Text(
+                'Métodos de pago',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(height: 10),
+              const _MethodTile(
+                icon: Icons.account_balance_wallet_outlined,
+                title: 'PayPal',
+                subtitle: 'Paga con PayPal (enlace/indicaciones).',
+              ),
+              const _MethodTile(
+                icon: Icons.payments_outlined,
+                title: 'Zelle',
+                subtitle: 'Transferencia Zelle (indicaciones).',
+              ),
+              const _MethodTile(
+                icon: Icons.phone_android_outlined,
+                title: 'Pago móvil',
+                subtitle: 'Pago móvil bancario (indicaciones).',
+              ),
+              const _MethodTile(
+                icon: Icons.account_balance_outlined,
+                title: 'Transferencia bancaria nacional',
+                subtitle: 'Transferencia nacional (indicaciones).',
+              ),
+            ],
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e', style: TextStyle(color: cs.error))),
       ),
     );
   }
 }
 
-class _ProductTile extends StatelessWidget {
-  const _ProductTile({required this.product, required this.onSubscribe});
+class _SoftCard extends StatelessWidget {
+  const _SoftCard({required this.child});
 
-  final ProductDetails product;
-  final VoidCallback onSubscribe;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
+    required this.colegPaid,
+    required this.colegPending,
+    required this.congPaid,
+    required this.congPending,
+  });
+
+  final String colegPaid;
+  final String colegPending;
+  final String congPaid;
+  final String congPending;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SoftCard(
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(product.title, style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 4),
-                  Text(product.description, style: Theme.of(context).textTheme.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 4),
-                  Text(product.price, style: Theme.of(context).textTheme.titleSmall),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            FilledButton(onPressed: onSubscribe, child: const Text('Suscribirme')),
+            Text('Resumen', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
+            const SizedBox(height: 10),
+            _Line(label: 'Colegiatura pagada', value: colegPaid),
+            _Line(label: 'Colegiatura pendiente', value: colegPending),
+            const SizedBox(height: 6),
+            _Line(label: 'Congresos pagados', value: congPaid),
+            _Line(label: 'Congresos pendientes', value: congPending),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _Line extends StatelessWidget {
+  const _Line({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w800))),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w900)),
+        ],
+      ),
+    );
+  }
+}
+
+class _MethodTile extends StatelessWidget {
+  const _MethodTile({required this.icon, required this.title, required this.subtitle});
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      margin: const EdgeInsets.only(bottom: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
+      ),
+      child: ListTile(
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.22),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Icon(icon, color: Colors.black54),
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+        subtitle: Text(subtitle),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Indicaciones de pago por configurar.')),
+          );
+        },
       ),
     );
   }

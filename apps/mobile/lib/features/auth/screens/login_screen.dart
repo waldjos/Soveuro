@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/auth_shell.dart';
+import '../../../shared/widgets/svu_logo.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -44,50 +46,72 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 48),
-                Text('Soveuro', style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                Text('Inicia sesión', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 32),
-                if (_error != null) ...[
-                  Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                  const SizedBox(height: 16),
-                ],
-                TextFormField(
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-                  validator: (v) => v == null || v.isEmpty ? 'Ingresa tu email' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _password,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Contraseña', border: OutlineInputBorder()),
-                  validator: (v) => v == null || v.isEmpty ? 'Ingresa tu contraseña' : null,
-                ),
-                const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: _loading ? null : _submit,
-                  child: _loading ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)) : const Text('Entrar'),
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () => context.push('/register'),
-                  child: const Text('¿No tienes cuenta? Regístrate'),
-                ),
-              ],
+    final cs = Theme.of(context).colorScheme;
+    return AuthShell(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 28),
+            const Align(alignment: Alignment.center, child: SvuLogo(height: 40)),
+            const SizedBox(height: 22),
+            Text(
+              'Inicia sesión',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
-          ),
+            const SizedBox(height: 26),
+            if (_error != null) ...[
+              Text(
+                _error!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: cs.error),
+              ),
+              const SizedBox(height: 12),
+            ],
+            TextFormField(
+              controller: _email,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                hintText: 'Correo electrónico',
+                prefixIcon: Icon(Icons.mail_outline),
+              ),
+              validator: (v) => v == null || v.isEmpty ? 'Ingresa tu email' : null,
+            ),
+            const SizedBox(height: 14),
+            TextFormField(
+              controller: _password,
+              obscureText: true,
+              decoration: const InputDecoration(
+                hintText: 'Contraseña',
+                prefixIcon: Icon(Icons.lock_outline),
+              ),
+              validator: (v) => v == null || v.isEmpty ? 'Ingresa tu contraseña' : null,
+            ),
+            const SizedBox(height: 18),
+            FilledButton(
+              onPressed: _loading ? null : _submit,
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF0B6B63),
+                foregroundColor: Colors.white,
+                minimumSize: const Size.fromHeight(48),
+                shape: const StadiumBorder(),
+              ),
+              child: _loading
+                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Text('Entrar'),
+            ),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => context.push('/register'),
+              child: const Text('¿No tienes cuenta? Regístrate'),
+            ),
+            TextButton(
+              onPressed: () => context.go('/welcome'),
+              child: Text('Volver', style: TextStyle(color: cs.onSurface.withValues(alpha: 0.7))),
+            ),
+          ],
         ),
       ),
     );

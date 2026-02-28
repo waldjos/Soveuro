@@ -40,7 +40,9 @@ apps/mobile/.dart_tool/
 apps/mobile/.packages
 apps/mobile/.flutter-plugins
 apps/mobile/.flutter-plugins-dependencies
+apps/mobile/.metadata
 
 # Misc
 *.tgz
 .cache/
+_soveuro_design_page1.png

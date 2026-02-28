@@ -76,8 +76,7 @@ class PaymentsController {
   Future<List<ProductDetails>> loadProducts() async {
     await _ensureInitialized();
     if (!_initialized) return [];
-    final response = await InAppPurchase.instance.getProducts(kSubscriptionProductIds);
-    if (response.notFoundIDs.isNotEmpty) return response.productDetails;
+    final response = await InAppPurchase.instance.queryProductDetails(kSubscriptionProductIds);
     return response.productDetails;
   }
 

@@ -21,9 +21,12 @@ class MainScaffold extends StatelessWidget {
               context.go('/events');
               break;
             case 2:
-              context.go('/payments');
+              context.go('/zoriak');
               break;
             case 3:
+              context.go('/payments');
+              break;
+            case 4:
               context.go('/profile');
               break;
           }
@@ -31,6 +34,16 @@ class MainScaffold extends StatelessWidget {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.medical_services), label: 'Doctores'),
           NavigationDestination(icon: Icon(Icons.event), label: 'Eventos'),
+          NavigationDestination(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 2),
+              child: Image(
+                image: AssetImage('assets/sponsors/zoriak.png'),
+                height: 22,
+              ),
+            ),
+            label: 'Zoriak',
+          ),
           NavigationDestination(icon: Icon(Icons.payment), label: 'Pagos'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Perfil'),
         ],
@@ -42,8 +55,9 @@ class MainScaffold extends StatelessWidget {
     final loc = GoRouterState.of(context).matchedLocation;
     if (loc.startsWith('/doctors')) return 0;
     if (loc.startsWith('/events')) return 1;
-    if (loc.startsWith('/payments')) return 2;
-    if (loc.startsWith('/profile')) return 3;
+    if (loc.startsWith('/zoriak')) return 2;
+    if (loc.startsWith('/payments')) return 3;
+    if (loc.startsWith('/profile')) return 4;
     return 0;
   }
 }

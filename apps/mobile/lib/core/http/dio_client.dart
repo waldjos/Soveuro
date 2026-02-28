@@ -7,8 +7,9 @@ import 'auth_interceptor.dart';
 final dioClientProvider = Provider<Dio>((ref) {
   final dio = Dio(BaseOptions(
     baseUrl: Env.baseUrl,
-    connectTimeout: const Duration(seconds: 15),
-    receiveTimeout: const Duration(seconds: 15),
+    // Render puede “despertar” en el primer request; evitamos timeouts falsos.
+    connectTimeout: const Duration(seconds: 45),
+    receiveTimeout: const Duration(seconds: 45),
     headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
   ));
   dio.interceptors.add(AuthInterceptor(dio, TokenStorage()));

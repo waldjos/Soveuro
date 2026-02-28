@@ -26,6 +26,43 @@ enum SubscriptionStatus {
   PENDING
 }
 
+enum DoctorApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DoctorType {
+  RESIDENT
+  UROLOGIST
+  OTHER
+}
+
+enum AuditEventType {
+  LOGIN_SUCCESS
+  REGISTER_SUCCESS
+  DOCTOR_APP_SUBMITTED
+  DOCTOR_APP_APPROVED
+  DOCTOR_APP_REJECTED
+}
+
+enum FeeKind {
+  COLEGIATURA
+  CONGRESO
+}
+
+enum PaymentMethod {
+  PAYPAL
+  ZELLE
+  PAGO_MOVIL
+  TRANSFERENCIA
+}
+
+enum FeeStatus {
+  PENDING
+  PAID
+}
+
 model User {
   id           String    @id @default(uuid())
   email        String    @unique
@@ -37,8 +74,11 @@ model User {
 
   profile      Profile?
   doctor       Doctor?
+  doctorApplication DoctorApplication?
   subscription Subscription?
   refreshTokens RefreshToken[]
+  auditEvents  AuditEvent[]
+  fees         Fee[]
 }
 
 model RefreshToken {
@@ -100,4 +140,53 @@ model Subscription {
   updatedAt   DateTime          @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DoctorApplication {
+  id          String                  @id @default(uuid())
+  userId      String                  @unique @map("user_id")
+  status      DoctorApplicationStatus @default(PENDING)
+  phone       String?
+  nationalId  String?                 @map("national_id")
+  location    String?
+  doctorType  DoctorType?             @map("doctor_type")
+  specialty   String?
+  subspecialty String?
+  avatarUrl   String?                 @map("avatar_url")
+  createdAt   DateTime                @default(now()) @map("created_at")
+  updatedAt   DateTime                @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditEvent {
+  id        String         @id @default(uuid())
+  type      AuditEventType
+  userId    String?        @map("user_id")
+  meta      Json?
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([type])
+}
+
+model Fee {
+  id         String        @id @default(uuid())
+  userId     String        @map("user_id")
+  kind       FeeKind
+  method     PaymentMethod
+  status     FeeStatus     @default(PENDING)
+  amountCents Int          @map("amount_cents")
+  currency   String        @default("USD")
+  note       String?
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([kind])
+  @@index([status])
 }

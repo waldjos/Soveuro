@@ -16,9 +16,5 @@ class ProfileRepository {
 }
 
 final meProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
-  try {
-    return await ref.read(profileRepositoryProvider).me();
-  } catch (_) {
-    return null;
-  }
+  return await ref.read(profileRepositoryProvider).me();
 });

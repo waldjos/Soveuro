@@ -25,7 +25,14 @@ class AuthInterceptor extends Interceptor {
         return handler.next(err);
       }
       try {
-        final dio = Dio(BaseOptions(baseUrl: Env.baseUrl));
+        final dio = Dio(
+          BaseOptions(
+            baseUrl: Env.baseUrl,
+            connectTimeout: const Duration(seconds: 45),
+            receiveTimeout: const Duration(seconds: 45),
+            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+          ),
+        );
         final response = await dio.post<Map<String, dynamic>>(
           '/auth/refresh',
           data: {'refreshToken': refreshToken},
