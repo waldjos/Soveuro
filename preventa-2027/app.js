@@ -25,8 +25,8 @@
     document.body.style.overflow = "";
   };
 
-  $$(".openModal").forEach((button) => {
-    button.addEventListener("click", () => openModal());
+  $(".openModal").forEach((button) => {
+    button.addEventListener("click", () => openModal(button.dataset.interest || ""));
   });
 
   $(".modal-close")?.addEventListener("click", closeModal);
@@ -50,14 +50,46 @@
   updateProgress();
 
   // Inventory tabs.
-  $$(".tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      $$(".tab").forEach((item) => item.classList.remove("active"));
-      $$(".inventory-panel").forEach((panel) => panel.classList.remove("active"));
+  const tabs = $(".tab");
+  tabs.forEach((tab, index) => {
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
+    tab.setAttribute("tabindex", index === 0 ? "0" : "-1");
+    const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
+    const panelId = `panel-${tab.dataset.tab}`;
+    const tabId = `tab-${tab.dataset.tab}`;
+    tab.id = tabId;
+    tab.setAttribute("aria-controls", panelId);
+    if (panel) {
+      panel.id = panelId;
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", tabId);
+    }
+
+    const activateTab = () => {
+      tabs.forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-selected", "false");
+        item.setAttribute("tabindex", "-1");
+      });
+      $(".inventory-panel").forEach((item) => item.classList.remove("active"));
       tab.classList.add("active");
-      document
-        .querySelector(`[data-panel="${tab.dataset.tab}"]`)
-        ?.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      tab.setAttribute("tabindex", "0");
+      panel?.classList.add("active");
+    };
+
+    tab.addEventListener("click", activateTab);
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = tabs.length - 1;
+      tabs[nextIndex].focus();
+      tabs[nextIndex].click();
     });
   });
 
@@ -170,6 +202,13 @@
     if (requestSummary) requestSummary.textContent = summary;
     if (requestResult) requestResult.hidden = false;
 
+    const emailRequest = $("#emailRequest");
+    if (emailRequest) {
+      const subject = encodeURIComponent(`Solicitud comercial SVU 2027 · ${data.get("empresa") || "Casa comercial"}`);
+      const body = encodeURIComponent(summary);
+      emailRequest.href = `mailto:soveuro@gmail.com?subject=${subject}&body=${body}`;
+    }
+
     requestResult?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
 
@@ -195,7 +234,8 @@
   });
 
   // GSAP / ScrollTrigger.
-  if (window.gsap && window.ScrollTrigger) {
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if (!reduceMotion && window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
 
     gsap.from(".hero-copy > *", {
