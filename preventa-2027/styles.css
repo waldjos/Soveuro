@@ -816,3 +816,70 @@ body.menu-open{overflow:hidden}
     transition:none!important;
   }
 }
+
+
+/* =========================================================
+   MODULE: PLATFORM IMAGERY / EUROBUILDING VISUAL SYSTEM
+   ========================================================= */
+.visual-crop{
+  background-repeat:no-repeat;
+  background-color:#eaf3ff;
+}
+.visual-a{
+  background-image:url("https://design.canva.ai/npHg4oCFMh56UO9");
+}
+.visual-b{
+  background-image:url("https://design.canva.ai/thVkQhwJUkeE0XK");
+}
+.hero-photo.visual-crop{
+  display:block;
+  width:100%;
+  height:570px;
+  border-radius:34px;
+  box-shadow:0 30px 85px rgba(29,87,156,.22);
+  background-size:200% 200%;
+  background-position:0 0;
+}
+.visual-card-media{
+  width:100%;
+  height:190px;
+  display:block;
+  overflow:hidden;
+  border-bottom:1px solid var(--line);
+  transition:transform .35s ease,filter .35s ease;
+}
+.visual-card:hover .visual-card-media{
+  transform:scale(1.025);
+  filter:saturate(1.04) contrast(1.02);
+}
+.visual-a-stands{
+  background-size:200% 200%;
+  background-position:100% 0;
+}
+.visual-a-science{
+  background-size:200% 200%;
+  background-position:0 100%;
+}
+.visual-a-app{
+  background-size:200% 200%;
+  background-position:100% 100%;
+}
+.visual-b-experience{
+  background-size:300% 300%;
+  background-position:100% 100%;
+}
+.visual-b-data{
+  background-size:300% 300%;
+  background-position:0 100%;
+}
+@media(max-width:1180px){
+  .hero-photo.visual-crop{height:520px}
+}
+@media(max-width:680px){
+  .hero-photo.visual-crop{
+    height:360px;
+    border-radius:24px;
+    background-size:200% 200%;
+  }
+  .visual-card-media{height:210px}
+}
