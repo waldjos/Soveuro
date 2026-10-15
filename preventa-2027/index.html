@@ -29,6 +29,8 @@
   }
   </script>
 
+  <link rel="preconnect" href="https://raw.githubusercontent.com">
+  <link rel="preload" as="image" href="https://raw.githubusercontent.com/waldjos/Soveuro/preventa-2027/preventa-2027/assets/hero-eurobuilding.webp" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -59,7 +61,7 @@
 
       <div class="header-actions">
         <span class="header-year" aria-hidden="true">SVU 2027</span>
-        <button class="btn btn-primary header-cta openModal">Solicitar propuesta <span aria-hidden="true">→</span></button>
+        <a class="btn btn-primary header-cta" href="#cierre">Cierre comercial <span aria-hidden="true">→</span></a>
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -87,7 +89,7 @@
       </nav>
 
       <div class="mobile-menu-footer">
-        <button class="btn btn-primary openModal mobile-cta">Solicitar propuesta comercial →</button>
+        <a class="btn btn-primary mobile-cta" href="#cierre">Ir al cierre comercial →</a>
         <div class="mobile-menu-meta">
           <span>Caracas · 2027</span>
           <a href="https://soveuro.org/" target="_blank" rel="noopener">soveuro.org ↗</a>
@@ -97,7 +99,7 @@
   </header>
 
   <main id="top">
-    <header class="hero">
+    <header class="hero presentation-chapter" data-chapter="Portada">
       <div class="hero-wash"></div>
       <div class="container hero-grid">
         <div class="hero-copy reveal">
@@ -122,7 +124,7 @@
         </div>
 
         <div class="hero-media reveal">
-          <div class="hero-photo visual-crop visual-a visual-a-hero" role="img" aria-label="Concepto visual SVU 2027 en el Eurobuilding de Caracas"></div>
+          <img src="https://raw.githubusercontent.com/waldjos/Soveuro/preventa-2027/preventa-2027/assets/hero-eurobuilding.webp" alt="Concepto visual SVU 2027 en el Eurobuilding de Caracas" class="hero-photo presentation-image" width="1440" height="810" fetchpriority="high" decoding="async">
           <div class="hero-media-card">
             <span class="media-icon">◇</span>
             <div>
@@ -145,7 +147,7 @@
       </div>
     </section>
 
-    <section class="section visual-opportunities" id="oportunidades">
+    <section class="section visual-opportunities presentation-chapter" id="oportunidades" data-chapter="Patrocinios">
       <div class="container">
         <div class="section-heading reveal">
           <div>
@@ -160,59 +162,59 @@
 
         <div class="visual-card-grid">
           <article class="visual-card reveal">
-            <div class="visual-card-media visual-crop visual-a visual-a-stands" role="img" aria-label="Concepto visual de stands y exposición SVU 2027"></div>
+            <img src="https://raw.githubusercontent.com/waldjos/Soveuro/preventa-2027/preventa-2027/assets/stands.webp" alt="Concepto visual de stands y exposición SVU 2027" class="visual-card-media presentation-image" width="1360" height="777" loading="lazy" decoding="async">
             <div class="visual-card-body">
               <span class="visual-badge yellow">Exposición</span>
               <h3>Stands & Exhibición</h3>
               <p>VIP, Oro, Plata, Bronce, foyer y ubicaciones especiales.</p>
-              <button class="arrow-btn openModal" data-interest="Stand Oro" aria-label="Consultar stands">→</button>
+              <span class="card-cue" aria-hidden="true">→</span>
             </div>
           </article>
 
           <article class="visual-card reveal">
-            <div class="visual-card-media visual-crop visual-a visual-a-science" role="img" aria-label="Concepto visual de simposios y educación SVU 2027"></div>
+            <img src="https://raw.githubusercontent.com/waldjos/Soveuro/preventa-2027/preventa-2027/assets/science.webp" alt="Concepto visual de simposios y educación SVU 2027" class="visual-card-media presentation-image" width="1360" height="777" loading="lazy" decoding="async">
             <div class="visual-card-body">
               <span class="visual-badge blue">Ciencia</span>
               <h3>Simposios & Educación</h3>
               <p>Sesiones científicas, talleres, lunch conference y contenidos patrocinados.</p>
-              <button class="arrow-btn openModal" data-interest="Simposio patrocinado" aria-label="Consultar simposios">→</button>
+              <span class="card-cue" aria-hidden="true">→</span>
             </div>
           </article>
 
           <article class="visual-card reveal">
-            <div class="visual-card-media visual-crop visual-b visual-b-experience" role="img" aria-label="Concepto visual de networking, hospitality y experiencias especiales"></div>
+            <div class="visual-card-media visual-graphic visual-graphic-experience" role="img" aria-label="Experiencias especiales y hospitality SVU 2027"><span>HOSPITALITY</span><strong>Experiencias que conectan.</strong></div>
             <div class="visual-card-body">
               <span class="visual-badge purple">Experiencias</span>
               <h3>Experiencias Especiales</h3>
               <p>Hospitality, inauguración, coffee breaks, clausura y activaciones.</p>
-              <button class="arrow-btn openModal" data-interest="Hospitality" aria-label="Consultar experiencias">→</button>
+              <span class="card-cue" aria-hidden="true">→</span>
             </div>
           </article>
 
           <article class="visual-card reveal">
-            <div class="visual-card-media visual-crop visual-a visual-a-app" role="img" aria-label="Concepto visual de SoveUro App durante el Congreso 2027"></div>
+            <div class="visual-card-media visual-graphic visual-graphic-app" role="img" aria-label="SoveUro App durante el Congreso 2027"><span>SOVEURO APP</span><strong>La presencia continúa en digital.</strong></div>
             <div class="visual-card-body">
               <span class="visual-badge green">Digital</span>
               <h3>SoveUro App</h3>
               <p>Publicidad, perfiles, contenido patrocinado y llamados a la acción.</p>
-              <button class="arrow-btn openModal" data-interest="App Takeover" aria-label="Consultar SoveUro App">→</button>
+              <span class="card-cue" aria-hidden="true">→</span>
             </div>
           </article>
 
           <article class="visual-card reveal">
-            <div class="visual-card-media visual-crop visual-b visual-b-data" role="img" aria-label="Concepto visual de data, interacción y experiencia digital"></div>
+            <div class="visual-card-media visual-graphic visual-graphic-data" role="img" aria-label="Data, interacción y medición de impacto"><span>DATA & ENGAGEMENT</span><strong>Interacción que se puede medir.</strong></div>
             <div class="visual-card-body">
               <span class="visual-badge pink">Data</span>
               <h3>Data & Engagement</h3>
               <p>Leads, QR/NFC, clics, escaneos e informe agregado de impacto.</p>
-              <button class="arrow-btn openModal" data-interest="Paquete 360°" aria-label="Consultar data y engagement">→</button>
+              <span class="card-cue" aria-hidden="true">→</span>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section catalog" id="inventario">
+    <section class="section catalog presentation-chapter" id="inventario" data-chapter="Inventario">
       <div class="container">
         <div class="section-heading reveal">
           <div>
@@ -282,7 +284,7 @@
       </div>
     </section>
 
-    <section class="section immersive" id="tunnel">
+    <section class="section immersive presentation-chapter" id="tunnel" data-chapter="Experiencia LED">
       <div class="container">
         <div class="section-heading reveal">
           <div>
@@ -325,7 +327,7 @@
       </div>
     </section>
 
-    <section class="section app-section-wrap" id="app">
+    <section class="section app-section-wrap presentation-chapter" id="app" data-chapter="SoveUro App">
       <div class="container app-experience">
         <div class="phone reveal">
           <div class="phone-ui">
@@ -375,7 +377,7 @@
       </div>
     </section>
 
-    <section class="section packages" id="paquetes">
+    <section class="section packages presentation-chapter" id="paquetes" data-chapter="Paquetes">
       <div class="container">
         <div class="section-heading reveal">
           <div>
@@ -424,7 +426,7 @@
       </div>
     </section>
 
-    <section class="section configurator" id="configurador">
+    <section class="section configurator presentation-chapter" id="configurador" data-chapter="Configurador">
       <div class="container">
         <div class="section-heading reveal">
           <div>
@@ -458,7 +460,7 @@
       </div>
     </section>
 
-    <section class="section venue" id="mapa">
+    <section class="section venue presentation-chapter" id="mapa" data-chapter="Venue">
       <div class="container">
         <div class="section-heading reveal">
           <div>
@@ -489,7 +491,7 @@
       </div>
     </section>
 
-    <section class="cta">
+    <section class="cta presentation-chapter" id="cierre" data-chapter="Cierre">
       <div class="container cta-box reveal">
         <div>
           <span class="eyebrow light-eyebrow">Preventa comercial 2027</span>
@@ -519,6 +521,17 @@
       <span>Los Palos Grandes · Chacao · Caracas</span>
     </div>
   </footer>
+
+
+  <div class="presentation-controls" id="presentationControls" aria-label="Controles de presentación">
+    <button type="button" id="prevChapter" class="presentation-control" aria-label="Capítulo anterior">←</button>
+    <div class="presentation-status" aria-live="polite">
+      <strong id="chapterLabel">Portada</strong>
+      <span id="chapterCounter">01 / 09</span>
+    </div>
+    <button type="button" id="nextChapter" class="presentation-control" aria-label="Capítulo siguiente">→</button>
+    <button type="button" id="fullscreenToggle" class="presentation-control fullscreen-control" aria-label="Entrar en pantalla completa">⛶</button>
+  </div>
 
   <div class="modal" id="contactModal" aria-hidden="true">
     <div class="modal-box">
