@@ -508,172 +508,502 @@
     });
   }
 
-  // Bright Three.js tunnel.
+  // Realistic hotel corridor + dynamic LED tunnel.
   const canvas = $("#tunnelCanvas");
   if (canvas && window.THREE) {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#eef6ff");
+    scene.background = new THREE.Color("#d7cec2");
+    scene.fog = new THREE.Fog(0xd7cec2, 22, 48);
 
     const camera = new THREE.PerspectiveCamera(
-      44,
+      46,
       Math.max(canvas.clientWidth, 1) / Math.max(canvas.clientHeight, 1),
       0.1,
       100
     );
-    camera.position.set(8.8, 5.4, 10.8);
-    camera.lookAt(0, 2.1, 0);
+
+    const cameraViews = {
+      entrance: {
+        pos: new THREE.Vector3(0.2, 2.25, 11.5),
+        look: new THREE.Vector3(0, 2.05, -7.4)
+      },
+      walk: {
+        pos: new THREE.Vector3(0.55, 2.15, 3.2),
+        look: new THREE.Vector3(0, 2.05, -9.5)
+      },
+      ballroom: {
+        pos: new THREE.Vector3(0.15, 2.05, -3.8),
+        look: new THREE.Vector3(0, 2.35, -16.5)
+      }
+    };
+
+    let activeCameraView = "entrance";
+    const desiredCameraPos = cameraViews.entrance.pos.clone();
+    const desiredLook = cameraViews.entrance.look.clone();
+    const currentLook = desiredLook.clone();
+    camera.position.copy(desiredCameraPos);
+    camera.lookAt(currentLook);
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    scene.add(new THREE.AmbientLight(0xffffff, 1.25));
+    scene.add(new THREE.HemisphereLight(0xfff5e6, 0x30435f, 2.4));
 
-    const keyLight = new THREE.PointLight(0x1769ff, 19, 35);
-    keyLight.position.set(1.2, 4.5, 2);
-    scene.add(keyLight);
+    const warmKey = new THREE.DirectionalLight(0xffddb0, 2.8);
+    warmKey.position.set(4, 8, 8);
+    warmKey.castShadow = true;
+    scene.add(warmKey);
 
-    const tunnel = new THREE.Group();
-    scene.add(tunnel);
+    const blueFill = new THREE.PointLight(0x0b4fa8, 15, 26, 1.8);
+    blueFill.position.set(-2.6, 3.4, 4.8);
+    scene.add(blueFill);
 
-    const floor = new THREE.Mesh(
-      new THREE.BoxGeometry(9, 0.18, 12),
-      new THREE.MeshStandardMaterial({ color: 0xf8fbff, roughness: 0.5, metalness: 0.02 })
-    );
-    floor.position.y = -0.1;
-    tunnel.add(floor);
+    const hallLight = new THREE.PointLight(0xffd8a2, 17, 25, 1.5);
+    hallLight.position.set(0, 4.8, -12);
+    scene.add(hallLight);
 
-    const adCanvas = document.createElement("canvas");
-    adCanvas.width = 1024;
-    adCanvas.height = 1024;
-    const ctx = adCanvas.getContext("2d");
-    const adTexture = new THREE.CanvasTexture(adCanvas);
-    adTexture.colorSpace = THREE.SRGBColorSpace;
+    const corridor = new THREE.Group();
+    scene.add(corridor);
 
-    let campaignColor = "#1769ff";
-
-    const ledMaterial = new THREE.MeshStandardMaterial({
-      map: adTexture,
-      emissiveMap: adTexture,
-      emissive: new THREE.Color(campaignColor),
-      emissiveIntensity: 1.1,
-      roughness: 0.22
+    // Materials inspired by a premium hotel corridor.
+    const marbleMat = new THREE.MeshPhysicalMaterial({
+      color: 0xb9ada2,
+      roughness: 0.24,
+      metalness: 0.04,
+      clearcoat: 0.42,
+      clearcoatRoughness: 0.18
+    });
+    const stoneMat = new THREE.MeshStandardMaterial({
+      color: 0xc9bba9,
+      roughness: 0.72,
+      metalness: 0.02
+    });
+    const darkMetalMat = new THREE.MeshStandardMaterial({
+      color: 0x3a3029,
+      roughness: 0.28,
+      metalness: 0.74
+    });
+    const brassMat = new THREE.MeshStandardMaterial({
+      color: 0xb79245,
+      roughness: 0.26,
+      metalness: 0.78
     });
 
-    const drawCampaign = () => {
-      const g = ctx.createLinearGradient(0, 0, 1024, 1024);
-      g.addColorStop(0, "#07275b");
-      g.addColorStop(0.55, "#0d57bf");
-      g.addColorStop(1, campaignColor);
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, 1024, 1024);
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.14, 27), marbleMat);
+    floor.position.set(0, -0.08, -2.1);
+    floor.receiveShadow = true;
+    corridor.add(floor);
 
-      ctx.strokeStyle = "rgba(255,255,255,.12)";
-      ctx.lineWidth = 2;
-      for (let x = 0; x < 1024; x += 64) {
+    // Subtle marble guide strips.
+    for (let x = -2.8; x <= 2.8; x += 1.4) {
+      const strip = new THREE.Mesh(
+        new THREE.BoxGeometry(0.025, 0.012, 26.5),
+        new THREE.MeshBasicMaterial({ color: 0xd8cec3, transparent: true, opacity: 0.48 })
+      );
+      strip.position.set(x, 0.002, -2.1);
+      corridor.add(strip);
+    }
+
+    // Right architectural wall.
+    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.22, 4.65, 16.8), stoneMat);
+    rightWall.position.set(3.7, 2.28, 0.2);
+    rightWall.receiveShadow = true;
+    corridor.add(rightWall);
+
+    // Left structural frame behind the LED wall.
+    const leftBacking = new THREE.Mesh(new THREE.BoxGeometry(0.24, 4.65, 16.8), darkMetalMat);
+    leftBacking.position.set(-3.7, 2.28, 0.2);
+    corridor.add(leftBacking);
+
+    // Dynamic LED canvas.
+    const ledCanvas = document.createElement("canvas");
+    ledCanvas.width = 1536;
+    ledCanvas.height = 768;
+    const ctx = ledCanvas.getContext("2d");
+    const ledTexture = new THREE.CanvasTexture(ledCanvas);
+    ledTexture.colorSpace = THREE.SRGBColorSpace;
+    ledTexture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+
+    let campaignColor = "#0b4fa8";
+    let motionMode = "institutional";
+    let ledIntensity = 1.25;
+
+    const ledMaterial = new THREE.MeshStandardMaterial({
+      map: ledTexture,
+      emissiveMap: ledTexture,
+      emissive: new THREE.Color(0x123a73),
+      emissiveIntensity: ledIntensity,
+      roughness: 0.2,
+      metalness: 0.03
+    });
+
+    const leftLED = new THREE.Mesh(new THREE.BoxGeometry(0.12, 4.18, 15.8), ledMaterial);
+    leftLED.position.set(-3.55, 2.24, 0.25);
+    corridor.add(leftLED);
+
+    // Ceiling LED only in the entrance corridor, then hotel ceiling resumes at the ballroom threshold.
+    const ceilingLED = new THREE.Mesh(new THREE.BoxGeometry(7.05, 0.12, 10.6), ledMaterial);
+    ceilingLED.position.set(0, 4.46, 2.7);
+    corridor.add(ceilingLED);
+
+    const ceilingHotel = new THREE.Mesh(
+      new THREE.BoxGeometry(7.05, 0.16, 6.2),
+      new THREE.MeshStandardMaterial({ color: 0xe0d5c8, roughness: 0.65 })
+    );
+    ceilingHotel.position.set(0, 4.46, -5.75);
+    corridor.add(ceilingHotel);
+
+    // Right wall vertical frames + warm sconces.
+    for (let z = 7.0; z >= -6.2; z -= 2.7) {
+      const frame = new THREE.Mesh(new THREE.BoxGeometry(0.22, 4.7, 0.12), darkMetalMat);
+      frame.position.set(3.57, 2.3, z);
+      corridor.add(frame);
+
+      const sconce = new THREE.PointLight(0xffc982, 5.4, 5.5, 2);
+      sconce.position.set(3.25, 2.35, z - 0.65);
+      scene.add(sconce);
+
+      const fixture = new THREE.Mesh(
+        new THREE.BoxGeometry(0.08, 0.58, 0.22),
+        new THREE.MeshStandardMaterial({ color: 0xd5ab60, emissive: 0x8a5c19, emissiveIntensity: 0.7 })
+      );
+      fixture.position.set(3.48, 2.35, z - 0.65);
+      corridor.add(fixture);
+    }
+
+    // Door frame into ballroom.
+    const frameTop = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.26, 0.32), darkMetalMat);
+    frameTop.position.set(0, 4.25, -7.25);
+    corridor.add(frameTop);
+    const frameLeft = new THREE.Mesh(new THREE.BoxGeometry(0.28, 4.3, 0.32), darkMetalMat);
+    frameLeft.position.set(-3.55, 2.1, -7.25);
+    corridor.add(frameLeft);
+    const frameRight = frameLeft.clone();
+    frameRight.position.x = 3.55;
+    corridor.add(frameRight);
+
+    // Ballroom beyond corridor.
+    const ballroomFloor = new THREE.Mesh(new THREE.BoxGeometry(11.5, 0.16, 15), marbleMat);
+    ballroomFloor.position.set(0, -0.06, -14.8);
+    ballroomFloor.receiveShadow = true;
+    corridor.add(ballroomFloor);
+
+    const ballroomBack = new THREE.Mesh(
+      new THREE.BoxGeometry(11.5, 5.2, 0.22),
+      new THREE.MeshStandardMaterial({ color: 0x372f2b, roughness: 0.56 })
+    );
+    ballroomBack.position.set(0, 2.55, -22.1);
+    corridor.add(ballroomBack);
+
+    // Stage + screen.
+    const stage = new THREE.Mesh(
+      new THREE.BoxGeometry(7.8, 0.5, 2.1),
+      new THREE.MeshStandardMaterial({ color: 0x24282d, roughness: 0.55 })
+    );
+    stage.position.set(0, 0.25, -20.6);
+    corridor.add(stage);
+
+    const stageCanvas = document.createElement("canvas");
+    stageCanvas.width = 1024;
+    stageCanvas.height = 512;
+    const stageCtx = stageCanvas.getContext("2d");
+    const stageTexture = new THREE.CanvasTexture(stageCanvas);
+    stageTexture.colorSpace = THREE.SRGBColorSpace;
+    const stageScreen = new THREE.Mesh(
+      new THREE.PlaneGeometry(6.9, 3.25),
+      new THREE.MeshBasicMaterial({ map: stageTexture })
+    );
+    stageScreen.position.set(0, 2.55, -21.93);
+    corridor.add(stageScreen);
+
+    const drawStage = () => {
+      const g = stageCtx.createLinearGradient(0, 0, 1024, 512);
+      g.addColorStop(0, "#082c65");
+      g.addColorStop(1, "#0f68c8");
+      stageCtx.fillStyle = g;
+      stageCtx.fillRect(0, 0, 1024, 512);
+      stageCtx.fillStyle = "#e0b83d";
+      stageCtx.font = "900 86px Arial";
+      stageCtx.fillText("SVU", 392, 220);
+      stageCtx.fillStyle = "#ffffff";
+      stageCtx.font = "700 28px Arial";
+      stageCtx.fillText("SOCIEDAD VENEZOLANA DE UROLOGÍA", 260, 270);
+      stageCtx.font = "600 24px Arial";
+      stageCtx.fillText("CONGRESO 2027", 408, 322);
+      stageTexture.needsUpdate = true;
+    };
+    drawStage();
+
+    // Ballroom chairs for depth and scale.
+    const chairMat = new THREE.MeshStandardMaterial({ color: 0x2d3035, roughness: 0.65 });
+    for (let row = 0; row < 4; row++) {
+      for (let col = -3; col <= 3; col++) {
+        const chair = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.78, 0.58), chairMat);
+        chair.position.set(col * 1.12, 0.42, -11.0 - row * 1.55);
+        corridor.add(chair);
+      }
+    }
+
+    // Simplified chandeliers in ballroom.
+    for (const z of [-11.5, -16]) {
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(1.1, 0.06, 12, 36),
+        new THREE.MeshStandardMaterial({ color: 0xd1ad66, emissive: 0x9b6e2f, emissiveIntensity: 0.65, metalness: 0.7, roughness: 0.2 })
+      );
+      ring.rotation.x = Math.PI / 2;
+      ring.position.set(0, 4.1, z);
+      corridor.add(ring);
+      const chandelierLight = new THREE.PointLight(0xffd7a0, 7, 9, 2);
+      chandelierLight.position.set(0, 3.85, z);
+      scene.add(chandelierLight);
+    }
+
+    // Human silhouettes for scale.
+    const humanMat = new THREE.MeshStandardMaterial({ color: 0x202832, roughness: 0.7 });
+    const addPerson = (x, z, scale = 1) => {
+      const person = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22 * scale, 0.3 * scale, 1.45 * scale, 14), humanMat);
+      body.position.y = 1.0 * scale;
+      body.castShadow = true;
+      person.add(body);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.24 * scale, 16, 12), new THREE.MeshStandardMaterial({ color: 0xa67b62, roughness: 0.8 }));
+      head.position.y = 1.88 * scale;
+      head.castShadow = true;
+      person.add(head);
+      person.position.set(x, 0, z);
+      corridor.add(person);
+    };
+    addPerson(0.65, 1.0, 0.9);
+    addPerson(-1.25, -1.3, 0.84);
+    addPerson(1.5, -5.0, 0.78);
+
+    // Decorative gold strips framing the LED wall.
+    const ledTrimTop = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.10, 15.9), brassMat);
+    ledTrimTop.position.set(-3.45, 4.32, 0.25);
+    corridor.add(ledTrimTop);
+    const ledTrimBottom = ledTrimTop.clone();
+    ledTrimBottom.position.y = 0.17;
+    corridor.add(ledTrimBottom);
+
+    const particles = Array.from({ length: 86 }, (_, i) => ({
+      x: (i * 173) % ledCanvas.width,
+      y: (i * 97) % ledCanvas.height,
+      r: 1.2 + (i % 5) * 0.8,
+      phase: (i * 0.37) % (Math.PI * 2)
+    }));
+
+    const hexToRgb = (hex) => {
+      const value = hex.replace("#", "");
+      const n = Number.parseInt(value, 16);
+      return {
+        r: (n >> 16) & 255,
+        g: (n >> 8) & 255,
+        b: n & 255
+      };
+    };
+
+    const drawLogoMark = (cx, cy, scale, alpha = 1) => {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = "#e3bb45";
+      ctx.fillStyle = "#e3bb45";
+      ctx.lineWidth = 10 * scale;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.ellipse(cx - 44 * scale, cy - 28 * scale, 28 * scale, 42 * scale, -0.35, 0, Math.PI * 2);
+      ctx.ellipse(cx + 44 * scale, cy - 28 * scale, 28 * scale, 42 * scale, 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx - 30 * scale, cy + 2 * scale);
+      ctx.quadraticCurveTo(cx - 16 * scale, cy + 50 * scale, cx, cy + 64 * scale);
+      ctx.quadraticCurveTo(cx + 16 * scale, cy + 50 * scale, cx + 30 * scale, cy + 2 * scale);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + 72 * scale, 22 * scale, 16 * scale, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const drawLedCampaign = (t) => {
+      const w = ledCanvas.width;
+      const h = ledCanvas.height;
+      const rgb = hexToRgb(campaignColor);
+      const pulse = reduceMotion ? 0.5 : (Math.sin(t * 1.55) + 1) / 2;
+
+      const bg = ctx.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, "#061c45");
+      bg.addColorStop(0.48, "#0a3b79");
+      bg.addColorStop(1, campaignColor);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.globalCompositeOperation = "screen";
+      for (let i = 0; i < 4; i++) {
+        const offset = ((t * (80 + i * 22)) % (w + 500)) - 250;
+        ctx.strokeStyle = `rgba(227,187,69,${0.22 + i * 0.07})`;
+        ctx.lineWidth = 7 + i * 5;
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, 1024);
+        ctx.moveTo(offset - 320, h * (0.78 - i * 0.08));
+        ctx.bezierCurveTo(offset + 160, h * 0.18, offset + 650, h * 0.95, offset + 1050, h * (0.2 + i * 0.04));
         ctx.stroke();
       }
 
+      particles.forEach((p, i) => {
+        const x = reduceMotion ? p.x : (p.x + t * (18 + (i % 7) * 4)) % w;
+        const y = p.y + Math.sin(t * 0.9 + p.phase) * 22;
+        ctx.fillStyle = `rgba(255,220,105,${0.28 + ((i % 5) / 10)})`;
+        ctx.beginPath();
+        ctx.arc(x, y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalCompositeOperation = "source-over";
+
+      let title = "SVU";
+      let subtitle = "SOCIEDAD VENEZOLANA DE UROLOGÍA";
+      let kicker = "CONGRESO 2027";
+      if (motionMode === "welcome") {
+        title = "BIENVENIDOS";
+        subtitle = "AL CONGRESO VENEZOLANO DE UROLOGÍA";
+        kicker = "SVU 2027";
+      } else if (motionMode === "sponsor") {
+        title = "SU MARCA × SVU";
+        subtitle = "UNA EXPERIENCIA DE ALTO IMPACTO";
+        kicker = "IMMERSIVE ENTRANCE";
+      }
+
+      const intro = reduceMotion ? 1 : Math.min(1, ((t * 0.55) % 5) / 1.1);
+      const logoScale = 0.88 + pulse * 0.05;
+      const logoAlpha = 0.82 + pulse * 0.18;
+
+      drawLogoMark(250, 330, logoScale, logoAlpha);
+
+      ctx.save();
+      ctx.globalAlpha = intro;
       ctx.fillStyle = "#ffffff";
-      ctx.font = "800 58px Arial";
-      ctx.fillText("SVU", 70, 110);
+      ctx.font = motionMode === "welcome" ? "900 82px Arial" : "900 118px Arial";
+      ctx.fillText(title, 390, 322);
+      ctx.fillStyle = "rgba(255,255,255,.88)";
+      ctx.font = "700 31px Arial";
+      ctx.fillText(subtitle, 394, 374);
+      ctx.fillStyle = "#e3bb45";
+      ctx.font = "800 24px Arial";
+      ctx.fillText(kicker, 394, 418);
+      ctx.restore();
 
-      ctx.fillStyle = "#ffc800";
-      ctx.font = "900 118px Arial";
-      ctx.fillText("2027", 66, 245);
+      // Pixel matrix cue.
+      ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},.18)`;
+      for (let x = 0; x < w; x += 54) {
+        ctx.fillRect(x, 0, 1, h);
+      }
 
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "800 46px Arial";
-      ctx.fillText("YOUR BRAND", 66, 760);
-
-      ctx.font = "30px Arial";
-      ctx.fillText("IMMERSIVE ENTRANCE", 66, 815);
-      adTexture.needsUpdate = true;
+      ledTexture.needsUpdate = true;
     };
 
-    const left = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.75, 9.2), ledMaterial);
-    left.position.set(-3.15, 2.45, 0);
-    tunnel.add(left);
-
-    const ceiling = new THREE.Mesh(new THREE.BoxGeometry(6.35, 0.18, 9.2), ledMaterial);
-    ceiling.position.set(0, 4.76, 0);
-    tunnel.add(ceiling);
-
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xe7eef8, roughness: 0.42, metalness: 0.05 });
-
-    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.75, 9.2), wallMaterial);
-    rightWall.position.set(3.15, 2.45, 0);
-    tunnel.add(rightWall);
-
-    const backWall = new THREE.Mesh(new THREE.BoxGeometry(6.45, 4.9, 0.18), wallMaterial);
-    backWall.position.set(0, 2.4, -4.62);
-    tunnel.add(backWall);
-
-    const opening = new THREE.Mesh(
-      new THREE.BoxGeometry(5.15, 3.75, 0.24),
-      new THREE.MeshStandardMaterial({ color: 0xffffff })
-    );
-    opening.position.set(0, 1.9, -4.74);
-    tunnel.add(opening);
-
-    for (let i = -4; i <= 4; i += 1.15) {
-      const guide = new THREE.Mesh(
-        new THREE.BoxGeometry(0.06, 0.035, 0.48),
-        new THREE.MeshBasicMaterial({ color: 0x1769ff })
+    // Optional official logo overlay inside the ballroom screen.
+    try {
+      const loader = new THREE.TextureLoader();
+      loader.setCrossOrigin("anonymous");
+      loader.load(
+        "https://soveuro.org/assets/images/logo-svu.png",
+        (logoTexture) => {
+          logoTexture.colorSpace = THREE.SRGBColorSpace;
+          const logoPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(2.15, 1.05),
+            new THREE.MeshBasicMaterial({ map: logoTexture, transparent: true, depthWrite: false })
+          );
+          logoPlane.position.set(0, 3.05, -21.86);
+          corridor.add(logoPlane);
+        },
+        undefined,
+        () => {}
       );
-      guide.position.set(0, 0.04, i);
-      tunnel.add(guide);
-    }
-
-    drawCampaign();
+    } catch {}
 
     let dragging = false;
     let previousX = 0;
+    let dragOffsetX = 0;
 
     canvas.addEventListener("pointerdown", (event) => {
       dragging = true;
       previousX = event.clientX;
       canvas.setPointerCapture?.(event.pointerId);
     });
-
     canvas.addEventListener("pointerup", (event) => {
       dragging = false;
       canvas.releasePointerCapture?.(event.pointerId);
     });
-
-    canvas.addEventListener("pointerleave", () => (dragging = false));
-
+    canvas.addEventListener("pointerleave", () => { dragging = false; });
     canvas.addEventListener("pointermove", (event) => {
       if (!dragging) return;
       const delta = event.clientX - previousX;
-      tunnel.rotation.y += delta * 0.005;
+      dragOffsetX = THREE.MathUtils.clamp(dragOffsetX - delta * 0.012, -1.35, 1.35);
       previousX = event.clientX;
+    });
+
+    $$(".motion-mode").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".motion-mode").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        motionMode = button.dataset.motion || "institutional";
+      });
+    });
+
+    $$(".camera-mode").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".camera-mode").forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        activeCameraView = button.dataset.camera || "entrance";
+        desiredCameraPos.copy(cameraViews[activeCameraView].pos);
+        desiredLook.copy(cameraViews[activeCameraView].look);
+        dragOffsetX = 0;
+      });
     });
 
     $$(".theme-dot").forEach((button) => {
       button.addEventListener("click", () => {
-        campaignColor = button.dataset.color || "#1769ff";
-        keyLight.color.set(campaignColor);
-        ledMaterial.emissive.set(campaignColor);
-        drawCampaign();
+        campaignColor = button.dataset.color || "#0b4fa8";
+        const c = new THREE.Color(campaignColor);
+        blueFill.color.copy(c);
+        ledMaterial.emissive.copy(c).multiplyScalar(0.44);
       });
     });
 
     $("#brightness")?.addEventListener("input", (event) => {
-      ledMaterial.emissiveIntensity = Number(event.target.value);
+      ledIntensity = Number(event.target.value);
+      ledMaterial.emissiveIntensity = ledIntensity;
     });
 
-    let time = 0;
+    let lastLedDraw = -1;
+    const clock = new THREE.Clock();
     const animate = () => {
       requestAnimationFrame(animate);
-      time += 0.0035;
-      if (!dragging) tunnel.rotation.y = Math.sin(time) * 0.075;
+      const t = clock.getElapsedTime();
+
+      if (reduceMotion || t - lastLedDraw > 1 / 24) {
+        drawLedCampaign(t);
+        lastLedDraw = t;
+      }
+
+      const targetPos = desiredCameraPos.clone();
+      targetPos.x += dragOffsetX;
+      camera.position.lerp(targetPos, reduceMotion ? 1 : 0.055);
+      currentLook.lerp(desiredLook, reduceMotion ? 1 : 0.06);
+      camera.lookAt(currentLook);
+
+      if (!reduceMotion) {
+        const subtle = Math.sin(t * 0.55) * 0.018;
+        corridor.rotation.y = subtle;
+      }
+
       renderer.render(scene, camera);
     };
+    drawLedCampaign(0);
     animate();
 
     const resize = () => {
