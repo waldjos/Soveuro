@@ -298,30 +298,60 @@
         </div>
 
         <div class="three-wrap reveal">
-          <div class="three-canvas">
-            <span class="canvas-label">Arrastra para explorar · modelo conceptual 3D</span>
-            <canvas id="tunnelCanvas"></canvas>
+          <div class="three-canvas hotel-tunnel-stage">
+            <div class="canvas-topline">
+              <span class="canvas-label">Simulación 3D · ingreso realista a salón del hotel</span>
+              <span class="tunnel-live"><i></i> MOTION ACTIVO</span>
+            </div>
+            <canvas id="tunnelCanvas" aria-label="Simulación 3D interactiva del túnel LED SVU hacia un salón del Hotel Eurobuilding"></canvas>
+            <div class="tunnel-stage-caption">
+              <strong>SVU Immersive Entrance</strong>
+              <span>Pared LED + cielo LED + acceso directo al salón</span>
+            </div>
           </div>
-          <aside class="three-panel">
-            <span class="eyebrow">Simulador</span>
-            <h3>Personalice una campaña</h3>
-            <p>Seleccione un color de marca y ajuste la intensidad LED para visualizar el takeover.</p>
-            <hr>
-            <label class="control-label">COLOR DE CAMPAÑA</label>
-            <div class="theme-buttons">
-              <button class="theme-dot theme-blue" data-color="#1769ff" aria-label="Azul SVU"></button>
-              <button class="theme-dot theme-yellow" data-color="#ffc800" aria-label="Amarillo SVU"></button>
-              <button class="theme-dot theme-red" data-color="#ef4056" aria-label="Rojo"></button>
-              <button class="theme-dot theme-purple" data-color="#7b61ff" aria-label="Morado"></button>
+
+          <aside class="three-panel tunnel-control-panel">
+            <span class="eyebrow">Simulador en vivo</span>
+            <h3>Entrada inmersiva a la sala</h3>
+            <p>La visualización representa un corredor del hotel que desemboca directamente en el salón. La identidad SVU se anima sobre pared y techo LED antes de revelar el escenario interior.</p>
+
+            <div class="tunnel-control-group">
+              <label class="control-label">SECUENCIA VISUAL</label>
+              <div class="motion-buttons" role="group" aria-label="Seleccionar secuencia visual">
+                <button class="motion-mode active" type="button" data-motion="institutional">Identidad SVU</button>
+                <button class="motion-mode" type="button" data-motion="welcome">Bienvenida</button>
+                <button class="motion-mode" type="button" data-motion="sponsor">Sponsor</button>
+              </div>
             </div>
-            <hr>
-            <label class="control-label" for="brightness">INTENSIDAD LED</label>
-            <input id="brightness" class="range" type="range" min=".3" max="2" value="1.1" step=".1">
-            <div class="product-combo">
-              <small>COMBINACIÓN RECOMENDADA</small>
-              <strong>Naming + L-Tunnel + App Takeover + Push</strong>
+
+            <div class="tunnel-control-group">
+              <label class="control-label">VISTA DE PRESENTACIÓN</label>
+              <div class="camera-buttons" role="group" aria-label="Seleccionar vista de cámara">
+                <button class="camera-mode active" type="button" data-camera="entrance">Entrada</button>
+                <button class="camera-mode" type="button" data-camera="walk">Recorrido</button>
+                <button class="camera-mode" type="button" data-camera="ballroom">Sala</button>
+              </div>
             </div>
-            <button class="btn btn-primary openModal full-btn" data-interest="Immersive Entrance">Consultar exclusividad</button>
+
+            <div class="tunnel-control-group">
+              <label class="control-label">COLOR DE CAMPAÑA</label>
+              <div class="theme-buttons">
+                <button class="theme-dot theme-blue" data-color="#0b4fa8" aria-label="Azul SVU"></button>
+                <button class="theme-dot theme-yellow" data-color="#d5aa18" aria-label="Dorado SVU"></button>
+                <button class="theme-dot theme-red" data-color="#ef4056" aria-label="Rojo"></button>
+                <button class="theme-dot theme-purple" data-color="#7b61ff" aria-label="Morado"></button>
+              </div>
+            </div>
+
+            <div class="tunnel-control-group">
+              <label class="control-label" for="brightness">INTENSIDAD LED</label>
+              <input id="brightness" class="range" type="range" min=".45" max="2.2" value="1.25" step=".05">
+            </div>
+
+            <div class="product-combo tunnel-concept-note">
+              <small>CONCEPTO DE VENTA</small>
+              <strong>El patrocinante domina la transición entre foyer y salón, sin convertir el acceso en un stand.</strong>
+            </div>
           </aside>
         </div>
       </div>
