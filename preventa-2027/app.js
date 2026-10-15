@@ -177,6 +177,130 @@
   window.addEventListener("scroll", updateProgress, { passive: true });
   updateProgress();
 
+
+  // Live presentation controls: chapter navigation + fullscreen.
+  const chapters = $(".presentation-chapter");
+  const prevChapter = $("#prevChapter");
+  const nextChapter = $("#nextChapter");
+  const fullscreenToggle = $("#fullscreenToggle");
+  const chapterLabel = $("#chapterLabel");
+  const chapterCounter = $("#chapterCounter");
+  const presenterReduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  let activeChapterIndex = 0;
+  let presenterTicking = false;
+
+  const updatePresenterUI = () => {
+    if (!chapters.length) return;
+    activeChapterIndex = Math.max(0, Math.min(activeChapterIndex, chapters.length - 1));
+    const chapter = chapters[activeChapterIndex];
+    if (chapterLabel) chapterLabel.textContent = chapter.dataset.chapter || `Capítulo ${activeChapterIndex + 1}`;
+    if (chapterCounter) {
+      chapterCounter.textContent = `${String(activeChapterIndex + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
+    }
+    if (prevChapter) prevChapter.disabled = activeChapterIndex === 0;
+    if (nextChapter) nextChapter.disabled = activeChapterIndex === chapters.length - 1;
+  };
+
+  const detectActiveChapter = () => {
+    if (!chapters.length) return;
+    const headerOffset = siteHeader?.offsetHeight || 80;
+    const targetY = headerOffset + Math.min(window.innerHeight * 0.22, 180);
+    let bestIndex = 0;
+    let bestDistance = Infinity;
+
+    chapters.forEach((chapter, index) => {
+      const rect = chapter.getBoundingClientRect();
+      const containsTarget = rect.top <= targetY && rect.bottom >= targetY;
+      const distance = containsTarget ? 0 : Math.min(Math.abs(rect.top - targetY), Math.abs(rect.bottom - targetY));
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestIndex = index;
+      }
+    });
+
+    if (bestIndex !== activeChapterIndex) {
+      activeChapterIndex = bestIndex;
+      updatePresenterUI();
+    }
+  };
+
+  const requestPresenterState = () => {
+    if (presenterTicking) return;
+    presenterTicking = true;
+    requestAnimationFrame(() => {
+      detectActiveChapter();
+      presenterTicking = false;
+    });
+  };
+
+  const goToChapter = (index) => {
+    if (!chapters.length) return;
+    activeChapterIndex = Math.max(0, Math.min(index, chapters.length - 1));
+    updatePresenterUI();
+    chapters[activeChapterIndex].scrollIntoView({
+      behavior: presenterReduceMotion ? "auto" : "smooth",
+      block: "start"
+    });
+  };
+
+  prevChapter?.addEventListener("click", () => goToChapter(activeChapterIndex - 1));
+  nextChapter?.addEventListener("click", () => goToChapter(activeChapterIndex + 1));
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen?.();
+      } else {
+        await document.exitFullscreen?.();
+      }
+    } catch {
+      // Fullscreen can be blocked by the browser or embedding context; keep presentation usable.
+    }
+  };
+
+  fullscreenToggle?.addEventListener("click", toggleFullscreen);
+  document.addEventListener("fullscreenchange", () => {
+    if (!fullscreenToggle) return;
+    const isFullscreen = Boolean(document.fullscreenElement);
+    fullscreenToggle.textContent = isFullscreen ? "×" : "⛶";
+    fullscreenToggle.setAttribute("aria-label", isFullscreen ? "Salir de pantalla completa" : "Entrar en pantalla completa");
+  });
+
+  const isTypingTarget = (target) => {
+    if (!(target instanceof HTMLElement)) return false;
+    return Boolean(
+      target.closest("input, textarea, select, [contenteditable='true']") ||
+      target.getAttribute("role") === "slider"
+    );
+  };
+
+  document.addEventListener("keydown", (event) => {
+    if (isTypingTarget(event.target)) return;
+    if (modal?.classList.contains("show") || mobileMenu?.classList.contains("is-open")) return;
+
+    if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+      event.preventDefault();
+      goToChapter(activeChapterIndex + 1);
+    } else if (event.key === "ArrowLeft" || event.key === "PageUp") {
+      event.preventDefault();
+      goToChapter(activeChapterIndex - 1);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      goToChapter(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      goToChapter(chapters.length - 1);
+    } else if (event.key.toLowerCase() === "f") {
+      event.preventDefault();
+      toggleFullscreen();
+    }
+  });
+
+  window.addEventListener("scroll", requestPresenterState, { passive: true });
+  window.addEventListener("resize", requestPresenterState, { passive: true });
+  updatePresenterUI();
+  requestPresenterState();
+
   // Accessible inventory tabs.
   const tabs = $$(".tab");
   tabs.forEach((tab, index) => {
