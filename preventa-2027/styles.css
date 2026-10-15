@@ -1202,3 +1202,300 @@ body.menu-open{overflow:hidden}
   .venue-photo:first-child{grid-column:auto}
   .venue-photo,.venue-photo img{min-height:190px}
 }
+
+
+/* =========================================================
+   SOVEURO APP — REAL APP REFERENCE
+   ========================================================= */
+.app-real-layout{
+  grid-template-columns:minmax(390px,470px) 1fr;
+  gap:72px;
+}
+.app-real-phone-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.app-real-phone{
+  width:min(100%,410px);
+  aspect-ratio:9/19.4;
+  max-height:790px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:10px solid #0c1629;
+  border-radius:42px;
+  background:#fff;
+  box-shadow:0 34px 80px rgba(19,44,83,.24);
+}
+.app-real-status{
+  height:34px;
+  padding:9px 16px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:#353b46;
+  font-size:.64rem;
+  font-weight:800;
+  background:#fff;
+}
+.app-real-topbar{
+  min-height:72px;
+  padding:10px 16px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #eceef2;
+}
+.app-real-logo{
+  width:64px;
+  height:36px;
+  object-fit:contain;
+  object-position:left center;
+}
+.app-real-top-actions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.app-real-bell,
+.app-real-avatar{
+  width:38px;
+  height:38px;
+  border:1px solid #e1e4e8;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#565d67;
+  background:#fafafa;
+  font-size:.72rem;
+  font-weight:800;
+}
+.app-real-avatar{
+  background:linear-gradient(145deg,#263750,#717b88);
+  color:#fff;
+  font-size:.58rem;
+}
+.app-real-content{
+  flex:1;
+  min-height:0;
+  padding:20px 16px 14px;
+  overflow:hidden;
+  background:#fff;
+}
+.app-real-greeting>span{
+  display:block;
+  color:#7d7f83;
+  font-size:.8rem;
+}
+.app-real-greeting>strong{
+  display:block;
+  margin-top:4px;
+  color:#34363a;
+  font-family:"Manrope",sans-serif;
+  font-size:1.95rem;
+  line-height:.98;
+  letter-spacing:-.055em;
+}
+.app-real-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:22px;
+}
+.app-real-stat{
+  min-height:122px;
+  padding:18px;
+  border:1px solid #e0e1e4;
+  border-radius:22px;
+  background:#fafafa;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.app-real-stat b{
+  color:#a58800;
+  font-family:"Manrope",sans-serif;
+  font-size:2rem;
+  line-height:1;
+}
+.app-real-stat:nth-child(2) b{color:#12bf69}
+.app-real-stat span{
+  margin-top:13px;
+  color:#66696e;
+  font-size:.78rem;
+}
+.app-real-section-title{
+  margin-top:22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+.app-real-section-title strong{
+  color:#34363a;
+  font-family:"Manrope",sans-serif;
+  font-size:1.05rem;
+}
+.app-real-section-title span{
+  color:#8a7613;
+  font-size:.72rem;
+}
+.app-real-event{
+  position:relative;
+  margin-top:12px;
+  min-height:205px;
+  overflow:hidden;
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 74% 22%,rgba(255,210,0,.22),transparent 22%),
+    linear-gradient(145deg,#071d4d 0%,#123d91 48%,#8559c8 100%);
+  box-shadow:0 12px 24px rgba(25,52,100,.18);
+}
+.app-real-event::after{
+  content:"";
+  position:absolute;
+  inset:auto -35px -55px 20%;
+  height:120px;
+  background:
+    radial-gradient(circle at 16% 85%,#ffe7bb 0 15%,transparent 16%),
+    radial-gradient(circle at 38% 76%,#fff1cd 0 12%,transparent 13%),
+    radial-gradient(circle at 62% 89%,#ffd493 0 13%,transparent 14%),
+    linear-gradient(180deg,transparent,rgba(0,0,0,.25));
+  opacity:.82;
+}
+.app-real-event-visual{
+  position:absolute;
+  z-index:2;
+  inset:0;
+  padding:22px 22px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+.app-real-event-kicker{
+  margin-bottom:auto;
+  color:#ffdb31;
+  font-size:.5rem;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.app-real-event-visual strong{
+  max-width:78%;
+  color:#fff;
+  font-family:"Manrope",sans-serif;
+  font-size:1.05rem;
+  line-height:1.08;
+}
+.app-real-event-visual small{
+  margin-top:5px;
+  color:rgba(255,255,255,.8);
+  font-size:.62rem;
+}
+.app-real-date{
+  position:absolute;
+  z-index:3;
+  top:12px;
+  right:12px;
+  min-width:56px;
+  padding:8px 7px;
+  border-radius:12px;
+  background:rgba(255,255,255,.94);
+  color:#706018;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+.app-real-date b{font-size:.82rem}
+.app-real-date small{font-size:.52rem;margin-top:1px}
+.app-real-sponsored{
+  margin-top:12px;
+  min-height:78px;
+  padding:13px 14px;
+  border-radius:16px;
+  background:#f2c200;
+  color:#2f3135;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:2px 12px;
+  transition:background .25s ease;
+}
+.app-real-sponsored small{
+  grid-column:1/-1;
+  font-size:.48rem;
+  font-weight:900;
+  letter-spacing:.12em;
+  opacity:.58;
+}
+.app-real-sponsored strong{
+  font-size:.78rem;
+  line-height:1.15;
+}
+.app-real-sponsored span{
+  font-size:.62rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+.app-real-bottom{
+  min-height:74px;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  border-top:1px solid #e7e8eb;
+  background:#fff;
+}
+.app-real-bottom span{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#909196;
+}
+.app-real-bottom i{
+  width:27px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  font-style:normal;
+  font-size:1rem;
+}
+.app-real-bottom small{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:.42rem;
+  letter-spacing:.02em;
+}
+.app-real-bottom .active{color:#9e8610}
+.app-real-caption{
+  margin-top:14px;
+  max-width:390px;
+  color:#7c8ca2;
+  font-size:.7rem;
+  line-height:1.45;
+  text-align:center;
+}
+.target-panel .segments{margin-top:24px}
+@media(max-width:1180px){
+  .app-real-layout{
+    grid-template-columns:1fr;
+    gap:44px;
+  }
+  .app-real-phone{
+    width:min(100%,400px);
+  }
+}
+@media(max-width:520px){
+  .app-real-phone{
+    width:min(100%,360px);
+    border-width:7px;
+    border-radius:34px;
+  }
+  .app-real-content{padding:16px 13px 12px}
+  .app-real-greeting>strong{font-size:1.68rem}
+  .app-real-stat{min-height:105px;padding:15px}
+  .app-real-event{min-height:185px}
+}
