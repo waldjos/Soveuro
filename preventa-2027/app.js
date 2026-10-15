@@ -43,12 +43,12 @@
   const mobileMenu = $("#mobileMenu");
   const menuClose = $("#menuClose");
   const menuBackdrop = $("#mobileMenuBackdrop");
-  const mobileLinks = $(".mobile-nav a");
-  const desktopLinks = $(".header-nav a[data-nav-section]");
+  const mobileLinks = $$(".mobile-nav a");
+  const desktopLinks = $$(".header-nav a[data-nav-section]");
   let lastHeaderFocus = null;
 
   const getMenuFocusables = () =>
-    $('a[href], button:not([disabled])', mobileMenu).filter(
+    $$('a[href], button:not([disabled])', mobileMenu).filter(
       (el) => el.offsetParent !== null
     );
 
