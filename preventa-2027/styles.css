@@ -1115,3 +1115,90 @@ body.menu-open{overflow:hidden}
     transition:none!important;
   }
 }
+
+
+/* =========================================================
+   FINAL PRESENTATION IMAGE PASS
+   ========================================================= */
+.hero-photo.presentation-image{
+  aspect-ratio:16/10;
+  object-fit:cover;
+  object-position:center 62%;
+  background:#dfeaf5;
+}
+.visual-card .visual-card-media.presentation-image{
+  object-position:center center!important;
+  filter:saturate(1.02) contrast(1.01);
+}
+.visual-card:hover .visual-card-media.presentation-image{
+  transform:scale(1.018);
+}
+.venue-photo-strip{
+  display:grid;
+  grid-template-columns:1.25fr 1fr 1fr;
+  gap:14px;
+  margin:-10px 0 22px;
+}
+.venue-photo{
+  position:relative;
+  min-height:210px;
+  margin:0;
+  overflow:hidden;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:#eaf3ff;
+  box-shadow:0 12px 34px rgba(42,83,135,.08);
+}
+.venue-photo img{
+  width:100%;
+  height:100%;
+  min-height:210px;
+  object-fit:cover;
+  display:block;
+  transition:transform .4s ease;
+}
+.venue-photo:hover img{transform:scale(1.025)}
+.venue-photo::after{
+  content:"";
+  position:absolute;
+  inset:38% 0 0;
+  background:linear-gradient(180deg,transparent,rgba(4,29,65,.78));
+  pointer-events:none;
+}
+.venue-photo figcaption{
+  position:absolute;
+  z-index:2;
+  left:18px;
+  right:18px;
+  bottom:16px;
+  display:flex;
+  flex-direction:column;
+  color:#fff;
+}
+.venue-photo figcaption strong{
+  font-family:"Manrope",sans-serif;
+  font-size:1rem;
+}
+.venue-photo figcaption span{
+  margin-top:3px;
+  font-size:.7rem;
+  color:rgba(255,255,255,.8);
+}
+@media(min-width:1200px){
+  .hero-photo.presentation-image{
+    height:min(61vh,650px);
+    min-height:540px;
+  }
+  .visual-card-media.presentation-image{
+    height:210px;
+  }
+}
+@media(max-width:900px){
+  .venue-photo-strip{grid-template-columns:1fr 1fr}
+  .venue-photo:first-child{grid-column:1/-1}
+}
+@media(max-width:680px){
+  .venue-photo-strip{grid-template-columns:1fr}
+  .venue-photo:first-child{grid-column:auto}
+  .venue-photo,.venue-photo img{min-height:190px}
+}
