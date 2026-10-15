@@ -266,16 +266,15 @@
     fullscreenToggle.setAttribute("aria-label", isFullscreen ? "Salir de pantalla completa" : "Entrar en pantalla completa");
   });
 
-  const isTypingTarget = (target) => {
+  const isInteractiveTarget = (target) => {
     if (!(target instanceof HTMLElement)) return false;
     return Boolean(
-      target.closest("input, textarea, select, [contenteditable='true']") ||
-      target.getAttribute("role") === "slider"
+      target.closest("input, textarea, select, button, a, [contenteditable='true'], [role='slider'], [role='button']")
     );
   };
 
   document.addEventListener("keydown", (event) => {
-    if (isTypingTarget(event.target)) return;
+    if (isInteractiveTarget(event.target)) return;
     if (modal?.classList.contains("show") || mobileMenu?.classList.contains("is-open")) return;
 
     if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
@@ -357,6 +356,13 @@
       if (bannerTitle) bannerTitle.textContent = segment.dataset.title || "";
       if (banner) banner.style.background = segment.dataset.color || "#ffc800";
     });
+  });
+
+  const markVenueInterest = $("#markVenueInterest");
+  markVenueInterest?.addEventListener("click", () => {
+    const selected = $("#zoneTitle")?.textContent?.trim() || "espacio seleccionado";
+    markVenueInterest.textContent = `Oportunidad marcada · ${selected} ✓`;
+    markVenueInterest.classList.add("is-marked");
   });
 
   // Venue explorer.
