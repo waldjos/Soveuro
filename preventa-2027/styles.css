@@ -1499,3 +1499,155 @@ body.menu-open{overflow:hidden}
   .app-real-stat{min-height:105px;padding:15px}
   .app-real-event{min-height:185px}
 }
+
+
+/* =========================================================
+   REALISTIC HOTEL TUNNEL SIMULATION
+   ========================================================= */
+.hotel-tunnel-stage{
+  position:relative;
+  min-height:660px;
+  background:
+    radial-gradient(circle at 75% 16%,rgba(28,101,205,.14),transparent 28rem),
+    linear-gradient(180deg,#ede7dd,#d8d0c4);
+  border:1px solid #c9c0b4;
+  box-shadow:0 24px 70px rgba(42,53,68,.18);
+}
+.hotel-tunnel-stage canvas{
+  position:absolute;
+  inset:0;
+}
+.canvas-topline{
+  position:absolute;
+  z-index:5;
+  left:18px;
+  right:18px;
+  top:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+}
+.canvas-topline .canvas-label{
+  position:static;
+}
+.tunnel-live{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 11px;
+  border-radius:999px;
+  background:rgba(9,28,57,.8);
+  color:#fff;
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  backdrop-filter:blur(10px);
+}
+.tunnel-live i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#68e49f;
+  box-shadow:0 0 0 5px rgba(104,228,159,.12);
+}
+.tunnel-stage-caption{
+  position:absolute;
+  z-index:5;
+  left:20px;
+  bottom:18px;
+  max-width:420px;
+  padding:14px 16px;
+  border-radius:16px;
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 12px 30px rgba(34,45,61,.16);
+  backdrop-filter:blur(12px);
+  pointer-events:none;
+}
+.tunnel-stage-caption strong,
+.tunnel-stage-caption span{
+  display:block;
+}
+.tunnel-stage-caption strong{
+  color:var(--navy);
+  font-family:"Manrope",sans-serif;
+  font-size:.9rem;
+}
+.tunnel-stage-caption span{
+  margin-top:3px;
+  color:#687991;
+  font-size:.7rem;
+}
+.tunnel-control-panel{
+  padding:27px;
+}
+.tunnel-control-panel h3{
+  margin-bottom:8px;
+}
+.tunnel-control-panel>p{
+  margin-top:0;
+  font-size:.9rem;
+}
+.tunnel-control-group{
+  padding-top:19px;
+  margin-top:19px;
+  border-top:1px solid var(--line);
+}
+.motion-buttons,
+.camera-buttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+.motion-mode,
+.camera-mode{
+  min-height:42px;
+  padding:9px 8px;
+  border:1px solid #cdddeb;
+  border-radius:12px;
+  background:#fff;
+  color:#59718f;
+  font-size:.7rem;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.motion-mode:hover,
+.camera-mode:hover,
+.motion-mode.active,
+.camera-mode.active{
+  border-color:#0b4fa8;
+  background:#edf5ff;
+  color:#0b4fa8;
+  box-shadow:inset 0 0 0 1px #0b4fa8;
+}
+.tunnel-concept-note{
+  margin-top:22px;
+  background:linear-gradient(145deg,#f8f3df,#fff);
+  border-color:#eadca5;
+}
+.tunnel-concept-note strong{
+  line-height:1.42;
+}
+@media(max-width:1180px){
+  .hotel-tunnel-stage{min-height:560px}
+}
+@media(max-width:680px){
+  .hotel-tunnel-stage{min-height:470px}
+  .canvas-topline{
+    align-items:flex-start;
+  }
+  .tunnel-live{display:none}
+  .tunnel-stage-caption{
+    left:12px;
+    right:12px;
+    bottom:12px;
+    max-width:none;
+  }
+  .motion-buttons,
+  .camera-buttons{
+    grid-template-columns:1fr;
+  }
+}
