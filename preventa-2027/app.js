@@ -25,75 +25,74 @@
     document.body.style.overflow = "";
   };
 
-  $(".openModal").forEach((button) => {
+  $$(".openModal").forEach((button) => {
     button.addEventListener("click", () => openModal(button.dataset.interest || ""));
   });
 
   $(".modal-close")?.addEventListener("click", closeModal);
-
   modal?.addEventListener("click", (event) => {
     if (event.target === modal) closeModal();
   });
-
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal?.classList.contains("show")) closeModal();
+    if (event.key === "Escape") closeModal();
   });
 
-  // Progress bar.
   const progress = $("#progress");
   const updateProgress = () => {
     const max = document.documentElement.scrollHeight - window.innerHeight;
-    const value = max > 0 ? (window.scrollY / max) * 100 : 0;
-    if (progress) progress.style.width = `${Math.min(100, Math.max(0, value))}%`;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    if (progress) progress.style.width = `${Math.min(100, Math.max(0, pct))}%`;
   };
   window.addEventListener("scroll", updateProgress, { passive: true });
   updateProgress();
 
-  // Inventory tabs.
-  const tabs = $(".tab");
+  // Accessible inventory tabs.
+  const tabs = $$(".tab");
   tabs.forEach((tab, index) => {
+    const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
+    const tabId = `tab-${tab.dataset.tab}`;
+    const panelId = `panel-${tab.dataset.tab}`;
+
+    tab.id = tabId;
     tab.setAttribute("role", "tab");
     tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
     tab.setAttribute("tabindex", index === 0 ? "0" : "-1");
-    const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
-    const panelId = `panel-${tab.dataset.tab}`;
-    const tabId = `tab-${tab.dataset.tab}`;
-    tab.id = tabId;
     tab.setAttribute("aria-controls", panelId);
+
     if (panel) {
       panel.id = panelId;
       panel.setAttribute("role", "tabpanel");
       panel.setAttribute("aria-labelledby", tabId);
     }
 
-    const activateTab = () => {
+    const activate = () => {
       tabs.forEach((item) => {
         item.classList.remove("active");
         item.setAttribute("aria-selected", "false");
         item.setAttribute("tabindex", "-1");
       });
-      $(".inventory-panel").forEach((item) => item.classList.remove("active"));
+      $$(".inventory-panel").forEach((item) => item.classList.remove("active"));
       tab.classList.add("active");
       tab.setAttribute("aria-selected", "true");
       tab.setAttribute("tabindex", "0");
       panel?.classList.add("active");
     };
 
-    tab.addEventListener("click", activateTab);
+    tab.addEventListener("click", activate);
     tab.addEventListener("keydown", (event) => {
       if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
-      let nextIndex = index;
-      if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
-      if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
-      if (event.key === "Home") nextIndex = 0;
-      if (event.key === "End") nextIndex = tabs.length - 1;
-      tabs[nextIndex].focus();
-      tabs[nextIndex].click();
+      let next = index;
+      if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+      if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === "Home") next = 0;
+      if (event.key === "End") next = tabs.length - 1;
+      tabs[next].focus();
+      tabs[next].click();
     });
   });
 
-  // App ad simulation.
+  // SoveUro ad simulator.
   const banner = $("#appBanner");
   const bannerTitle = $("#bannerTitle");
   $$(".segment").forEach((segment) => {
@@ -101,20 +100,18 @@
       $$(".segment").forEach((item) => item.classList.remove("active"));
       segment.classList.add("active");
       if (bannerTitle) bannerTitle.textContent = segment.dataset.title || "";
-      if (banner) banner.style.background = segment.dataset.color || "#f4d21f";
+      if (banner) banner.style.background = segment.dataset.color || "#ffc800";
     });
   });
 
   // Venue explorer.
   const zones = $$(".zone");
-  const zoneTitle = $("#zoneTitle");
-  const zoneDescription = $("#zoneDescription");
   zones.forEach((zone) => {
     zone.addEventListener("click", () => {
       zones.forEach((item) => item.classList.remove("active"));
       zone.classList.add("active");
-      if (zoneTitle) zoneTitle.textContent = zone.dataset.name || "";
-      if (zoneDescription) zoneDescription.textContent = zone.dataset.desc || "";
+      $("#zoneTitle").textContent = zone.dataset.name || "";
+      $("#zoneDescription").textContent = zone.dataset.desc || "";
     });
   });
 
@@ -127,12 +124,12 @@
     },
     launch: {
       title: "Lanzamiento 360°",
-      text: "Diseñado para presentar una novedad con demostración, educación y alta frecuencia de marca.",
+      text: "Presentación de producto con demostración, ciencia y frecuencia de marca.",
       items: ["Stand Oro", "Immersive Entrance", "Simposio patrocinado", "App Takeover", "Sponsored Push"]
     },
     leads: {
       title: "Lead Generation",
-      text: "Convierte el tráfico físico y digital en oportunidades de contacto medibles.",
+      text: "Convierte tráfico físico y digital en oportunidades de contacto medibles.",
       items: ["Stand comercial", "QR / NFC", "Lead Capture", "Exhibitor Profile", "Sponsor Impact Report"]
     },
     education: {
@@ -142,24 +139,18 @@
     },
     networking: {
       title: "Relacionamiento premium",
-      text: "Crea oportunidades de conversación y experiencia alrededor de momentos sociales de alto valor.",
-      items: ["Hospitality Room", "Coffee Break", "Cóctel de bienvenida", "Exhibitor Profile"]
+      text: "Crea oportunidades de conversación alrededor de momentos sociales y hospitality.",
+      items: ["Hospitality", "Coffee Break", "Cóctel de bienvenida", "Exhibitor Profile"]
     }
   };
 
   const renderPlan = (key) => {
     const plan = plans[key] || plans.visibility;
-    const title = $("#planTitle");
-    const text = $("#planText");
-    const items = $("#planItems");
-
-    if (title) title.textContent = plan.title;
-    if (text) text.textContent = plan.text;
-    if (items) {
-      items.innerHTML = plan.items
-        .map((item, index) => `<div class="plan-chip"><span>${item}</span><span>0${index + 1}</span></div>`)
-        .join("");
-    }
+    $("#planTitle").textContent = plan.title;
+    $("#planText").textContent = plan.text;
+    $("#planItems").innerHTML = plan.items
+      .map((item, i) => `<div class="plan-chip"><span>${item}</span><span>0${i + 1}</span></div>`)
+      .join("");
   };
 
   $$(".goal").forEach((goal) => {
@@ -172,17 +163,14 @@
   renderPlan("visibility");
 
   $("#planCTA")?.addEventListener("click", () => {
-    const activeGoal = $(".goal.active");
-    const key = activeGoal?.dataset.goal || "visibility";
-    const plan = plans[key];
-    openModal(plan.items[0] || "");
+    const key = $(".goal.active")?.dataset.goal || "visibility";
+    openModal(plans[key].items[0]);
   });
 
-  // Lead summary, without pretending it has been transmitted.
+  // Lead summary + email action.
   $("#leadForm")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
+    const data = new FormData(event.currentTarget);
     const summary = [
       "SOLICITUD COMERCIAL SVU 2027",
       "",
@@ -199,94 +187,71 @@
       "Nota: disponibilidad, metrajes, precios y condiciones finales 2027 sujetos a aprobación comercial."
     ].join("\n");
 
-    if (requestSummary) requestSummary.textContent = summary;
-    if (requestResult) requestResult.hidden = false;
+    requestSummary.textContent = summary;
+    requestResult.hidden = false;
 
-    const emailRequest = $("#emailRequest");
-    if (emailRequest) {
-      const subject = encodeURIComponent(`Solicitud comercial SVU 2027 · ${data.get("empresa") || "Casa comercial"}`);
-      const body = encodeURIComponent(summary);
-      emailRequest.href = `mailto:soveuro@gmail.com?subject=${subject}&body=${body}`;
-    }
+    const subject = encodeURIComponent(`Solicitud comercial SVU 2027 · ${data.get("empresa") || "Casa comercial"}`);
+    const body = encodeURIComponent(summary);
+    $("#emailRequest").href = `mailto:soveuro@gmail.com?subject=${subject}&body=${body}`;
 
-    requestResult?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    requestResult.scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
 
   $("#copyRequest")?.addEventListener("click", async (event) => {
     const button = event.currentTarget;
-    const text = requestSummary?.textContent || "";
-    if (!text) return;
-
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(requestSummary.textContent || "");
       const old = button.textContent;
       button.textContent = "Solicitud copiada ✓";
-      setTimeout(() => (button.textContent = old), 1600);
+      setTimeout(() => (button.textContent = old), 1400);
     } catch {
       const range = document.createRange();
-      if (requestSummary) {
-        range.selectNodeContents(requestSummary);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-      }
+      range.selectNodeContents(requestSummary);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
   });
 
-  // GSAP / ScrollTrigger.
+  // Bright GSAP motion system.
   const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
   if (!reduceMotion && window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
 
     gsap.from(".hero-copy > *", {
       opacity: 0,
-      y: 24,
-      duration: 0.9,
-      stagger: 0.08,
+      y: 26,
+      duration: 0.85,
+      stagger: 0.07,
       ease: "power3.out"
     });
 
-    gsap.from(".stage-card", {
+    gsap.from(".hero-media", {
       opacity: 0,
-      scale: 0.94,
-      rotateY: -6,
-      duration: 1.2,
-      delay: 0.15,
+      x: 35,
+      scale: 0.97,
+      duration: 1.05,
+      delay: 0.12,
       ease: "power3.out"
     });
 
     $$(".reveal").forEach((element) => {
       if (element.closest(".hero")) return;
       gsap.from(element, {
-        scrollTrigger: {
-          trigger: element,
-          start: "top 86%",
-          once: true
-        },
+        scrollTrigger: { trigger: element, start: "top 88%", once: true },
         opacity: 0,
-        y: 34,
-        duration: 0.85,
+        y: 28,
+        duration: 0.75,
         ease: "power3.out"
       });
     });
-
-    gsap.to(".hero-glow", {
-      yPercent: 18,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-      }
-    });
   }
 
-  // Three.js immersive entrance.
+  // Bright Three.js tunnel.
   const canvas = $("#tunnelCanvas");
   if (canvas && window.THREE) {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#020202");
+    scene.background = new THREE.Color("#eef6ff");
 
     const camera = new THREE.PerspectiveCamera(
       44,
@@ -297,16 +262,15 @@
     camera.position.set(8.8, 5.4, 10.8);
     camera.lookAt(0, 2.1, 0);
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.42);
-    scene.add(ambient);
+    scene.add(new THREE.AmbientLight(0xffffff, 1.25));
 
-    const keyLight = new THREE.PointLight(0xf4d21f, 24, 35);
-    keyLight.position.set(1.2, 4.2, 1.5);
+    const keyLight = new THREE.PointLight(0x1769ff, 19, 35);
+    keyLight.position.set(1.2, 4.5, 2);
     scene.add(keyLight);
 
     const tunnel = new THREE.Group();
@@ -314,7 +278,7 @@
 
     const floor = new THREE.Mesh(
       new THREE.BoxGeometry(9, 0.18, 12),
-      new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.7, metalness: 0.08 })
+      new THREE.MeshStandardMaterial({ color: 0xf8fbff, roughness: 0.5, metalness: 0.02 })
     );
     floor.position.y = -0.1;
     tunnel.add(floor);
@@ -326,26 +290,25 @@
     const adTexture = new THREE.CanvasTexture(adCanvas);
     adTexture.colorSpace = THREE.SRGBColorSpace;
 
-    let campaignColor = "#f4d21f";
+    let campaignColor = "#1769ff";
 
     const ledMaterial = new THREE.MeshStandardMaterial({
       map: adTexture,
       emissiveMap: adTexture,
       emissive: new THREE.Color(campaignColor),
-      emissiveIntensity: 1.15,
-      roughness: 0.28,
-      metalness: 0.05
+      emissiveIntensity: 1.1,
+      roughness: 0.22
     });
 
     const drawCampaign = () => {
-      const gradient = ctx.createLinearGradient(0, 0, 1024, 1024);
-      gradient.addColorStop(0, "#050505");
-      gradient.addColorStop(0.62, "#111111");
-      gradient.addColorStop(1, campaignColor);
-      ctx.fillStyle = gradient;
+      const g = ctx.createLinearGradient(0, 0, 1024, 1024);
+      g.addColorStop(0, "#07275b");
+      g.addColorStop(0.55, "#0d57bf");
+      g.addColorStop(1, campaignColor);
+      ctx.fillStyle = g;
       ctx.fillRect(0, 0, 1024, 1024);
 
-      ctx.strokeStyle = "rgba(255,255,255,.08)";
+      ctx.strokeStyle = "rgba(255,255,255,.12)";
       ctx.lineWidth = 2;
       for (let x = 0; x < 1024; x += 64) {
         ctx.beginPath();
@@ -358,7 +321,7 @@
       ctx.font = "800 58px Arial";
       ctx.fillText("SVU", 70, 110);
 
-      ctx.fillStyle = campaignColor;
+      ctx.fillStyle = "#ffc800";
       ctx.font = "900 118px Arial";
       ctx.fillText("2027", 66, 245);
 
@@ -368,35 +331,30 @@
 
       ctx.font = "30px Arial";
       ctx.fillText("IMMERSIVE ENTRANCE", 66, 815);
-
       adTexture.needsUpdate = true;
     };
 
-    const leftScreen = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.75, 9.2), ledMaterial);
-    leftScreen.position.set(-3.15, 2.45, 0);
-    tunnel.add(leftScreen);
+    const left = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.75, 9.2), ledMaterial);
+    left.position.set(-3.15, 2.45, 0);
+    tunnel.add(left);
 
-    const ceilingScreen = new THREE.Mesh(new THREE.BoxGeometry(6.35, 0.18, 9.2), ledMaterial);
-    ceilingScreen.position.set(0, 4.76, 0);
-    tunnel.add(ceilingScreen);
+    const ceiling = new THREE.Mesh(new THREE.BoxGeometry(6.35, 0.18, 9.2), ledMaterial);
+    ceiling.position.set(0, 4.76, 0);
+    tunnel.add(ceiling);
 
-    const darkMaterial = new THREE.MeshStandardMaterial({
-      color: 0x111111,
-      roughness: 0.45,
-      metalness: 0.28
-    });
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xe7eef8, roughness: 0.42, metalness: 0.05 });
 
-    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.75, 9.2), darkMaterial);
+    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(0.18, 4.75, 9.2), wallMaterial);
     rightWall.position.set(3.15, 2.45, 0);
     tunnel.add(rightWall);
 
-    const backWall = new THREE.Mesh(new THREE.BoxGeometry(6.45, 4.9, 0.18), darkMaterial);
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(6.45, 4.9, 0.18), wallMaterial);
     backWall.position.set(0, 2.4, -4.62);
     tunnel.add(backWall);
 
     const opening = new THREE.Mesh(
       new THREE.BoxGeometry(5.15, 3.75, 0.24),
-      new THREE.MeshStandardMaterial({ color: 0x020202 })
+      new THREE.MeshStandardMaterial({ color: 0xffffff })
     );
     opening.position.set(0, 1.9, -4.74);
     tunnel.add(opening);
@@ -404,7 +362,7 @@
     for (let i = -4; i <= 4; i += 1.15) {
       const guide = new THREE.Mesh(
         new THREE.BoxGeometry(0.06, 0.035, 0.48),
-        new THREE.MeshBasicMaterial({ color: 0xf4d21f })
+        new THREE.MeshBasicMaterial({ color: 0x1769ff })
       );
       guide.position.set(0, 0.04, i);
       tunnel.add(guide);
@@ -426,9 +384,7 @@
       canvas.releasePointerCapture?.(event.pointerId);
     });
 
-    canvas.addEventListener("pointerleave", () => {
-      dragging = false;
-    });
+    canvas.addEventListener("pointerleave", () => (dragging = false));
 
     canvas.addEventListener("pointermove", (event) => {
       if (!dragging) return;
@@ -439,7 +395,7 @@
 
     $$(".theme-dot").forEach((button) => {
       button.addEventListener("click", () => {
-        campaignColor = button.dataset.color || "#f4d21f";
+        campaignColor = button.dataset.color || "#1769ff";
         keyLight.color.set(campaignColor);
         ledMaterial.emissive.set(campaignColor);
         drawCampaign();
@@ -459,13 +415,13 @@
     };
     animate();
 
-    const resizeThree = () => {
+    const resize = () => {
       const width = Math.max(canvas.clientWidth, 1);
       const height = Math.max(canvas.clientHeight, 1);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
     };
-    window.addEventListener("resize", resizeThree);
+    window.addEventListener("resize", resize);
   }
 })();
