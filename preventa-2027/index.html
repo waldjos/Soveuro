@@ -38,25 +38,63 @@
   <a class="skip-link" href="#top">Saltar al contenido principal</a>
   <div class="progress" id="progress"></div>
 
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="#top" class="brand" aria-label="Sociedad Venezolana de Urología">
-        <img src="https://soveuro.org/assets/images/logo-svu.png" alt="Sociedad Venezolana de Urología" class="brand-logo">
-        <span class="brand-text"><strong>Sociedad Venezolana</strong><small>de Urología · Desde 1940</small></span>
+  <header class="site-header" id="siteHeader">
+    <div class="container header-shell">
+      <a href="#top" class="header-brand" aria-label="Ir al inicio · Sociedad Venezolana de Urología">
+        <img src="https://soveuro.org/assets/images/logo-svu.png" alt="Sociedad Venezolana de Urología" class="header-logo">
+        <span class="header-brand-copy">
+          <strong>Sociedad Venezolana de Urología</strong>
+          <small>Congreso 2027 · Preventa comercial</small>
+        </span>
       </a>
 
-      <div class="nav-links">
-        <a href="#oportunidades">Patrocinios</a>
-        <a href="#inventario">Inventario</a>
-        <a href="#tunnel">Experiencia LED</a>
-        <a href="#app">SoveUro App</a>
-        <a href="#configurador">Configurador</a>
-        <a href="#mapa">Plano</a>
+      <nav class="header-nav" aria-label="Navegación principal">
+        <a href="#oportunidades" data-nav-section="oportunidades">Patrocinios</a>
+        <a href="#inventario" data-nav-section="inventario">Inventario</a>
+        <a href="#tunnel" data-nav-section="tunnel">Experiencia LED</a>
+        <a href="#app" data-nav-section="app">SoveUro App</a>
+        <a href="#configurador" data-nav-section="configurador">Configurador</a>
+        <a href="#mapa" data-nav-section="mapa">Plano</a>
+      </nav>
+
+      <div class="header-actions">
+        <span class="header-year" aria-hidden="true">SVU 2027</span>
+        <button class="btn btn-primary header-cta openModal">Solicitar propuesta <span aria-hidden="true">→</span></button>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu-backdrop" id="mobileMenuBackdrop" hidden></div>
+
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <div class="mobile-menu-top">
+        <a href="#top" class="mobile-brand">
+          <img src="https://soveuro.org/assets/images/logo-svu.png" alt="SVU">
+          <span><strong>SVU 2027</strong><small>Preventa comercial</small></span>
+        </a>
+        <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">×</button>
       </div>
 
-      <button class="btn btn-primary openModal">Solicitar propuesta →</button>
+      <nav class="mobile-nav" aria-label="Navegación móvil">
+        <a href="#oportunidades"><span>01</span><strong>Patrocinios</strong><small>Opciones de presencia 2027</small></a>
+        <a href="#inventario"><span>02</span><strong>Inventario</strong><small>Venue, ciencia, digital y data</small></a>
+        <a href="#tunnel"><span>03</span><strong>Experiencia LED</strong><small>SVU Immersive Entrance</small></a>
+        <a href="#app"><span>04</span><strong>SoveUro App</strong><small>Inventario digital patrocinable</small></a>
+        <a href="#configurador"><span>05</span><strong>Configurador</strong><small>Diseñe su combinación</small></a>
+        <a href="#mapa"><span>06</span><strong>Plano</strong><small>Venue Explorer</small></a>
+      </nav>
+
+      <div class="mobile-menu-footer">
+        <button class="btn btn-primary openModal mobile-cta">Solicitar propuesta comercial →</button>
+        <div class="mobile-menu-meta">
+          <span>Caracas · 2027</span>
+          <a href="https://soveuro.org/" target="_blank" rel="noopener">soveuro.org ↗</a>
+        </div>
+      </div>
     </div>
-  </nav>
+  </header>
 
   <main id="top">
     <header class="hero">
