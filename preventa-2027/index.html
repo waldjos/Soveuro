@@ -40,28 +40,23 @@
   <a class="skip-link" href="#top">Saltar al contenido principal</a>
   <div class="progress" id="progress"></div>
 
-  <header class="site-header" id="siteHeader">
-    <div class="container header-shell">
-      <a href="#top" class="header-brand" aria-label="Ir al inicio · Sociedad Venezolana de Urología">
-        <img src="https://soveuro.org/assets/images/logo-svu.png" alt="Sociedad Venezolana de Urología" class="header-logo">
-        <span class="header-brand-copy">
-          <strong>Sociedad Venezolana de Urología</strong>
-          <small>Congreso 2027 · Preventa comercial</small>
-        </span>
+  <header class="site-header v2-header" id="siteHeader">
+    <div class="container header-shell v2-header-shell">
+      <a href="#top" class="header-brand v2-brand" aria-label="Inicio · Sociedad Venezolana de Urología">
+        <span class="v2-brand-mark">SVU</span>
+        <span class="v2-brand-copy">SOCIEDAD VENEZOLANA<br>DE UROLOGÍA</span>
       </a>
 
-      <nav class="header-nav" aria-label="Navegación principal">
-        <a href="#oportunidades" data-nav-section="oportunidades">Patrocinios</a>
-        <a href="#inventario" data-nav-section="inventario">Inventario</a>
-        <a href="#tunnel" data-nav-section="tunnel">Arco Digital</a>
-        <a href="#app" data-nav-section="app">SoveUro App</a>
-        <a href="#configurador" data-nav-section="configurador">Configurador</a>
-        <a href="#mapa" data-nav-section="mapa">Plano</a>
+      <nav class="header-nav v2-nav" aria-label="Navegación principal">
+        <a href="#top" data-nav-section="top">Inicio</a>
+        <a href="#oportunidad" data-nav-section="oportunidad">La oportunidad</a>
+        <a href="#svu365" data-nav-section="svu365">SVU 365</a>
+        <a href="#tunnel" data-nav-section="tunnel">Congreso 2027</a>
+        <a href="#configurador" data-nav-section="configurador">Construya su patrocinio</a>
       </nav>
 
       <div class="header-actions">
-        <span class="header-year" aria-hidden="true">SVU 2027</span>
-        <a class="btn btn-primary header-cta" href="#cierre">Cierre comercial <span aria-hidden="true">→</span></a>
+        <a class="v2-proposal-btn" href="#cierre">Solicitar propuesta</a>
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-controls="mobileMenu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -69,227 +64,160 @@
     </div>
 
     <div class="mobile-menu-backdrop" id="mobileMenuBackdrop" hidden></div>
-
-    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu v2-mobile-menu" id="mobileMenu" aria-hidden="true">
       <div class="mobile-menu-top">
         <a href="#top" class="mobile-brand">
-          <img src="https://soveuro.org/assets/images/logo-svu.png" alt="SVU">
+          <span class="v2-brand-mark mobile">SVU</span>
           <span><strong>SVU 2027</strong><small>Preventa comercial</small></span>
         </a>
         <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">×</button>
       </div>
-
       <nav class="mobile-nav" aria-label="Navegación móvil">
-        <a href="#oportunidades"><span>01</span><strong>Patrocinios</strong><small>Opciones de presencia 2027</small></a>
-        <a href="#inventario"><span>02</span><strong>Inventario</strong><small>Espacios, ciencia, digital y datos</small></a>
-        <a href="#tunnel"><span>03</span><strong>Arco Digital</strong><small>Arco Inmersivo SVU</small></a>
-        <a href="#app"><span>04</span><strong>SoveUro App</strong><small>Inventario digital patrocinable</small></a>
-        <a href="#configurador"><span>05</span><strong>Configurador</strong><small>Diseñe su combinación</small></a>
-        <a href="#mapa"><span>06</span><strong>Plano</strong><small>Mapa Comercial</small></a>
+        <a href="#top"><span>01</span><strong>Inicio</strong><small>Congreso Venezolano de Urología 2027</small></a>
+        <a href="#oportunidad"><span>02</span><strong>La oportunidad</strong><small>Comunidad, ciencia, industria y continuidad</small></a>
+        <a href="#calendario2027"><span>03</span><strong>Ecosistema 2027</strong><small>Calendario científico enero–julio</small></a>
+        <a href="#svu365"><span>04</span><strong>SVU 365</strong><small>Presencia anual para patrocinantes</small></a>
+        <a href="#tunnel"><span>05</span><strong>Congreso 2027</strong><small>Inventario presencial y científico</small></a>
+        <a href="#configurador"><span>06</span><strong>Construya su patrocinio</strong><small>Configure una propuesta</small></a>
       </nav>
-
       <div class="mobile-menu-footer">
-        <a class="btn btn-primary mobile-cta" href="#cierre">Ir al cierre comercial →</a>
-        <div class="mobile-menu-meta">
-          <span>Caracas · 2027</span>
-          <a href="https://soveuro.org/" target="_blank" rel="noopener">soveuro.org ↗</a>
-        </div>
+        <a class="btn btn-primary mobile-cta" href="#cierre">Solicitar propuesta →</a>
       </div>
     </div>
   </header>
 
   <main id="top">
-    <header class="hero presentation-chapter" data-chapter="Portada">
-      <div class="hero-wash"></div>
-      <div class="container hero-grid">
-        <div class="hero-copy reveal">
-          <span class="eyebrow">Congreso Venezolano de Urología</span>
-          <h1><span>SVU</span> <strong>2027</strong></h1>
-          <div class="hero-tagline">CIENCIA · CONEXIONES · IMPACTO</div>
-          <p class="hero-description">
-            Una preventa comercial diseñada como experiencia: exposición física, educación médica,
-            SoveUro App, activaciones inmersivas y métricas de campaña integradas en una sola propuesta.
-          </p>
 
-          <div class="hero-meta">
-            <div class="meta-item"><span class="meta-icon">◫</span><div><strong>2027</strong><small>Fechas por anunciar</small></div></div>
-            <div class="meta-item"><span class="meta-icon">⌖</span><div><strong>Hotel Eurobuilding</strong><small>Caracas · sede prevista</small></div></div>
-            <div class="meta-item"><span class="meta-icon">◎</span><div><strong>360°</strong><small>Presencial + científico + digital</small></div></div>
+    <section class="v2-screen v2-hero presentation-chapter" data-chapter="Portada" aria-labelledby="heroTitle">
+      <div class="v2-hero-bg" aria-hidden="true"></div>
+      <div class="v2-hero-shade" aria-hidden="true"></div>
+      <div class="container v2-screen-inner v2-hero-inner">
+        <div class="v2-hero-copy">
+          <span class="v2-kicker light">PREVENTA COMERCIAL</span>
+          <h1 id="heroTitle">Congreso<br>Venezolano<br>de Urología<br><em>2027</em></h1>
+          <div class="v2-hero-meta">
+            <span>▣ <strong>7 al 10 de julio de 2027</strong></span>
+            <span>⌖ <strong>Hotel Eurobuilding · Caracas</strong></span>
           </div>
-
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#oportunidades">Explorar patrocinios →</a>
-            <a class="btn btn-secondary" href="#tunnel">Ver arco interactivo</a>
-          </div>
+          <p>Más que un Congreso.<br>Una plataforma de conexión entre<br>la industria y la comunidad urológica<br>durante todo el año.</p>
+          <a class="v2-primary-action" href="#oportunidad">Comenzar presentación <span>→</span></a>
         </div>
-
-        <div class="hero-media reveal">
-          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/b1/9c/98/main-entrance.jpg?h=-1&s=1&w=1800" alt="Entrada real del Eurobuilding Hotel & Suites Caracas" class="hero-photo presentation-image" width="1800" height="1200" fetchpriority="high" decoding="async" referrerpolicy="no-referrer">
-          <div class="hero-media-card">
-            <span class="media-icon">◇</span>
-            <div>
-              <strong>Arco Inmersivo SVU</strong>
-              <small>Un arco digital con pantallas que convierte el acceso al salón en inventario premium.</small>
-            </div>
-            <a href="#tunnel" aria-label="Ver experiencia inmersiva">→</a>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <section class="value-strip" aria-label="Propuesta de valor">
-      <div class="container value-grid">
-        <div class="value-item"><span class="value-icon">◈</span><div><strong>Visibilidad 360°</strong><small>Presencial + digital</small></div></div>
-        <div class="value-item"><span class="value-icon">♙</span><div><strong>Audiencia profesional</strong><small>Comunidad urológica</small></div></div>
-        <div class="value-item"><span class="value-icon">◇</span><div><strong>Experiencias inmersivas</strong><small>Tecnología + marca</small></div></div>
-        <div class="value-item"><span class="value-icon">↗</span><div><strong>Datos de impacto</strong><small>Métricas agregadas</small></div></div>
-        <div class="value-item"><span class="value-icon">✦</span><div><strong>Legado SVU</strong><small>Desde 1940</small></div></div>
-      </div>
-    </section>
-
-    <section class="section visual-opportunities presentation-chapter" id="oportunidades" data-chapter="Patrocinios">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div>
-            <span class="eyebrow">Construya su presencia</span>
-            <h2>Opciones de patrocinio <span class="accent-blue">2027</span></h2>
-          </div>
-          <p>
-            Tomamos el inventario histórico de SVU y lo convertimos en una propuesta más visual,
-            clara y escalable. Precios y disponibilidad 2027 se definirán una vez aprobados por SVU.
-          </p>
-        </div>
-
-        <div class="visual-card-grid">
-          <article class="visual-card reveal">
-            <img src="https://img.plasmic.app/img-optimizer/v1/img/e4c88c46271697bbb9aea7f2452d6b57.png" alt="Salón del Eurobuilding preparado para eventos y exposición comercial" class="visual-card-media presentation-image" width="1200" height="800" loading="lazy" decoding="async">
-            <div class="visual-card-body">
-              <span class="visual-badge yellow">Exposición</span>
-              <h3>Stands y Exhibición</h3>
-              <p>VIP, Oro, Plata, Bronce, foyer y ubicaciones especiales.</p>
-              <span class="card-cue" aria-hidden="true">→</span>
-            </div>
-          </article>
-
-          <article class="visual-card reveal">
-            <img src="https://img.plasmic.app/img-optimizer/v1/img/239d6962cb1fe1582b37c6d33434d626.png" alt="Salón de reuniones del Eurobuilding para actividades científicas" class="visual-card-media presentation-image" width="1200" height="800" loading="lazy" decoding="async">
-            <div class="visual-card-body">
-              <span class="visual-badge blue">Ciencia</span>
-              <h3>Simposios y Educación</h3>
-              <p>Sesiones científicas, talleres, lunch conference y contenidos patrocinados.</p>
-              <span class="card-cue" aria-hidden="true">→</span>
-            </div>
-          </article>
-
-          <article class="visual-card reveal">
-            <img src="https://img.plasmic.app/img-optimizer/v1/img/629d215b8226bbc47cc1f6c9f6b33f63.jpg" alt="Espacio ejecutivo del Eurobuilding para hospitality y reuniones privadas" class="visual-card-media presentation-image" width="1200" height="800" loading="lazy" decoding="async">
-            <div class="visual-card-body">
-              <span class="visual-badge purple">Experiencias</span>
-              <h3>Experiencias Especiales</h3>
-              <p>Hospitalidad, inauguración, pausas de café, clausura y activaciones.</p>
-              <span class="card-cue" aria-hidden="true">→</span>
-            </div>
-          </article>
-
-          <article class="visual-card reveal">
-            <div class="visual-card-media visual-graphic visual-graphic-app" role="img" aria-label="SoveUro App durante el Congreso 2027"><span>SOVEURO APP</span><strong>La presencia continúa en digital.</strong></div>
-            <div class="visual-card-body">
-              <span class="visual-badge green">Digital</span>
-              <h3>SoveUro App</h3>
-              <p>Publicidad, perfiles, contenido patrocinado y llamados a la acción.</p>
-              <span class="card-cue" aria-hidden="true">→</span>
-            </div>
-          </article>
-
-          <article class="visual-card reveal">
-            <div class="visual-card-media visual-graphic visual-graphic-data" role="img" aria-label="Data, interacción y medición de impacto"><span>DATA & ENGAGEMENT</span><strong>Interacción que se puede medir.</strong></div>
-            <div class="visual-card-body">
-              <span class="visual-badge pink">Data</span>
-              <h3>Datos e Interacción</h3>
-              <p>Contactos, QR/NFC, clics, escaneos e informe agregado de impacto.</p>
-              <span class="card-cue" aria-hidden="true">→</span>
-            </div>
-          </article>
+        <div class="v2-slide-progress v2-slide-progress-light">
+          <strong>01 / 25</strong><span><i style="width:10%"></i></span>
         </div>
       </div>
     </section>
 
-    <section class="section catalog presentation-chapter inventory-focus" id="inventario" data-chapter="Inventario">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div>
-            <span class="eyebrow">Inventario comercial</span>
-            <h2>Cinco formas de <span class="accent-blue">activar una marca.</span></h2>
-          </div>
-          <p>
-            Para la presentación mostramos primero los activos que mejor explican la oportunidad comercial.
-            Las opciones complementarias quedan disponibles sin saturar la conversación.
-          </p>
+    <section class="v2-screen v2-opportunity presentation-chapter" id="oportunidad" data-chapter="La oportunidad" aria-labelledby="opportunityTitle">
+      <div class="container v2-screen-inner">
+        <div class="v2-heading-block">
+          <span class="v2-kicker">LA OPORTUNIDAD</span>
+          <h2 id="opportunityTitle">Cuatro días de máxima<br>concentración profesional.<br><em>Doce meses de continuidad digital.</em></h2>
         </div>
 
-        <div class="inventory-story reveal">
-          <article class="inventory-focus-card featured">
-            <span class="inventory-number">01</span>
-            <div>
-              <span class="visual-badge yellow">Espacios</span>
-              <h3>Exposición y presencia física</h3>
-              <p>Stands comerciales, foyer, ubicaciones premium, pantallas y Arco Inmersivo SVU.</p>
-            </div>
-            <a href="#mapa" class="inventory-link">Ver mapa comercial →</a>
+        <div class="v2-opportunity-grid">
+          <article class="v2-op-card">
+            <div class="v2-op-icon">●●●</div>
+            <h3>COMUNIDAD<br>MÉDICA</h3>
+            <img src="./assets/science.webp" alt="Comunidad médica reunida en un evento científico" loading="lazy">
+            <p>Más de 700 asistentes como referencia histórica del Congreso.</p>
           </article>
-
-          <article class="inventory-focus-card">
-            <span class="inventory-number">02</span>
-            <div>
-              <span class="visual-badge blue">Ciencia</span>
-              <h3>Educación médica patrocinada</h3>
-              <p>Simposio, taller precongreso y almuerzo-conferencia, sujetos a aprobación científica y regulatoria.</p>
-            </div>
-            <span class="inventory-link muted">Programa por validar</span>
+          <article class="v2-op-card">
+            <div class="v2-op-icon">▤</div>
+            <h3>CIENCIA</h3>
+            <img src="./assets/science.webp" alt="Actividad científica y académica" loading="lazy">
+            <p>Actualización, innovación y formación médica continua.</p>
           </article>
-
-          <article class="inventory-focus-card">
-            <span class="inventory-number">03</span>
-            <div>
-              <span class="visual-badge purple">Experiencias</span>
-              <h3>Momentos de relacionamiento</h3>
-              <p>Apertura, clausura, pausas de café, sala de hospitalidad y activaciones especiales.</p>
-            </div>
-            <span class="inventory-link muted">Formatos personalizables</span>
+          <article class="v2-op-card">
+            <div class="v2-op-icon">◇</div>
+            <h3>INDUSTRIA</h3>
+            <img src="./assets/stands.webp" alt="Exposición comercial para la industria" loading="lazy">
+            <p>Un espacio para generar conexiones y oportunidades con la comunidad.</p>
           </article>
-
-          <article class="inventory-focus-card">
-            <span class="inventory-number">04</span>
-            <div>
-              <span class="visual-badge green">Digital</span>
-              <h3>Presencia dentro de SoveUro App</h3>
-              <p>Banner, notificación patrocinada, perfil comercial y presencia destacada dentro de la aplicación.</p>
+          <article class="v2-op-card v2-op-card-gold">
+            <div class="v2-op-icon">▥</div>
+            <h3>PRESENCIA<br>ANUAL</h3>
+            <div class="v2-digital-card-visual">
+              <span class="mini-phone">SVU</span>
+              <span class="mini-screen">365</span>
             </div>
-            <a href="#app" class="inventory-link">Ver demostración →</a>
-          </article>
-
-          <article class="inventory-focus-card">
-            <span class="inventory-number">05</span>
-            <div>
-              <span class="visual-badge pink">Interacción</span>
-              <h3>Contactos y medición de resultados</h3>
-              <p>QR/NFC, formularios con consentimiento, encuestas e informe agregado de impacto.</p>
-            </div>
-            <span class="inventory-link muted">Medición integrada</span>
+            <p>Su marca activa durante todo el año con SVU 365.</p>
           </article>
         </div>
 
-        <details class="secondary-inventory reveal">
-          <summary>Ver oportunidades complementarias</summary>
-          <div class="secondary-inventory-grid">
-            <div><strong>Pantallas audiovisuales</strong><span>Spots y piezas de marca en zonas de circulación.</span></div>
-            <div><strong>Programa digital</strong><span>Presencia alrededor de agenda y contenidos del Congreso.</span></div>
-            <div><strong>Revista y contenido</strong><span>Espacios editoriales comerciales identificados.</span></div>
-            <div><strong>Ruta interactiva</strong><span>Activaciones en recorridos de alto tránsito.</span></div>
-            <div><strong>Encuestas en vivo</strong><span>Interacción con asistentes según lineamientos del evento.</span></div>
-            <div><strong>Control de exposición</strong><span>Reglas para frecuencia, etiquetado y revisión de marca.</span></div>
+        <div class="v2-slide-progress">
+          <strong>02 / 25</strong><span><i style="width:18%"></i></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-screen v2-calendar presentation-chapter" id="calendario2027" data-chapter="Ecosistema 2027" aria-labelledby="calendarTitle">
+      <div class="container v2-screen-inner">
+        <div class="v2-heading-block compact">
+          <span class="v2-kicker">ECOSISTEMA CIENTÍFICO 2027</span>
+          <h2 id="calendarTitle">Un año de oportunidades<br>de conexión y conocimiento.</h2>
+          <p>Jornadas, encuentros y congresos que mantienen activa la comunidad urológica durante el primer semestre y culminan en el Congreso Nacional.</p>
+        </div>
+
+        <div class="v2-calendar-strip" role="list" aria-label="Calendario científico SVU 2027">
+          <article class="v2-date-card" role="listitem"><span>FEBRERO</span><b>19–20</b><strong>Endourología</strong><small>Barquisimeto</small><div class="v2-place-art art-blue"></div></article>
+          <article class="v2-date-card" role="listitem"><span>MARZO</span><b>19–22</b><strong>Congreso EAU</strong><small>Ámsterdam</small><div class="v2-place-art art-canal"></div></article>
+          <article class="v2-date-card" role="listitem"><span>ABRIL</span><b>07–09</b><strong>Encuentro de Residentes</strong><small>Isla de Margarita</small><div class="v2-place-art art-beach"></div></article>
+          <article class="v2-date-card" role="listitem"><span>ABRIL / MAYO</span><b>30–01</b><strong>Uretra · Piso Pélvico</strong><small>Mérida</small><div class="v2-place-art art-mountain"></div></article>
+          <article class="v2-date-card" role="listitem"><span>MAYO</span><b>14–15</b><strong>Urooncología</strong><small>Valera</small><div class="v2-place-art art-city"></div></article>
+          <article class="v2-date-card" role="listitem"><span>MAYO</span><b>21–24</b><strong>AUA Meeting</strong><small>San Diego</small><div class="v2-place-art art-coast"></div></article>
+          <article class="v2-date-card" role="listitem"><span>JUNIO</span><b>09–11</b><strong>Congreso AEU</strong><small>España</small><div class="v2-place-art art-europe"></div></article>
+          <article class="v2-date-card featured" role="listitem"><span>JULIO</span><b>07–10</b><strong>Congreso Nacional</strong><small>Caracas</small><div class="v2-place-art art-caracas"></div></article>
+          <article class="v2-date-card" role="listitem"><span>POR ASIGNAR</span><b>2027</b><strong>Andrología</strong><small>Maturín</small><div class="v2-place-art art-green"></div></article>
+        </div>
+
+        <div class="v2-timeline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="active"></i><i></i></div>
+
+        <div class="v2-slide-progress">
+          <strong>03 / 25</strong><span><i style="width:26%"></i></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-screen v2-svu365 presentation-chapter" id="svu365" data-chapter="SVU 365" aria-labelledby="svu365Title">
+      <div class="container v2-screen-inner v2-svu365-grid">
+        <div class="v2-svu365-copy">
+          <span class="v2-script">SVU 365</span>
+          <h2 id="svu365Title">El Congreso dura<br>cuatro días.<br><em>Su presencia puede<br>durar todo el año.</em></h2>
+          <p>Una plataforma digital y científica para mantener su marca conectada con la comunidad urológica los 365 días.</p>
+          <a class="v2-primary-action" href="#app">Conozca SVU 365 <span>→</span></a>
+        </div>
+
+        <div class="v2-svu365-visual" aria-label="Ecosistema digital SVU 365">
+          <div class="v2-orbit orbit-one"></div>
+          <div class="v2-orbit orbit-two"></div>
+
+          <div class="v2-laptop">
+            <div class="v2-laptop-screen">
+              <div class="mini-site-head">SVU <span>Sociedad Venezolana de Urología</span></div>
+              <div class="mini-site-hero">Comunidad · Ciencia · Industria</div>
+              <div class="mini-site-grid"><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="v2-laptop-base"></div>
           </div>
-        </details>
+
+          <div class="v2-phone">
+            <div class="v2-phone-notch"></div>
+            <div class="v2-phone-logo">SoveUro</div>
+            <ul><li>Eventos</li><li>Noticias</li><li>Directorio</li><li>Empresas</li><li>Recursos</li></ul>
+          </div>
+
+          <div class="v2-benefit-pill pill-web"><b>◎</b><span><strong>Web SVU</strong><small>Visibilidad y contenidos</small></span></div>
+          <div class="v2-benefit-pill pill-app"><b>▣</b><span><strong>SoveUro App</strong><small>Conexión directa</small></span></div>
+          <div class="v2-benefit-pill pill-shop"><b>▤</b><span><strong>Vitrina Digital</strong><small>Productos disponibles</small></span></div>
+          <div class="v2-benefit-pill pill-events"><b>▦</b><span><strong>Eventos científicos</strong><small>Presencia en actividades</small></span></div>
+          <div class="v2-benefit-pill pill-qr"><b>⌗</b><span><strong>QR / NFC</strong><small>Conexión físico + digital</small></span></div>
+          <div class="v2-benefit-pill pill-metrics"><b>▥</b><span><strong>Métricas</strong><small>Resultados medibles</small></span></div>
+        </div>
+
+        <div class="v2-slide-progress v2-grid-span">
+          <strong>04 / 25</strong><span><i style="width:34%"></i></span>
+        </div>
       </div>
     </section>
 
