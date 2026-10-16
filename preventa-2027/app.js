@@ -365,6 +365,70 @@
     markVenueInterest.classList.add("is-marked");
   });
 
+  // Shared commercial proposal state.
+  const proposalSelections = [];
+  const proposalItems = $("#proposalItems");
+  const proposalFinalItems = $("#proposalFinalItems");
+  const proposalEmpty = $("#proposalEmpty");
+  const proposalFinalEmpty = $("#proposalFinalEmpty");
+  const proposalCount = $("#proposalCount");
+  const proposalSubtotal = $("#proposalSubtotal");
+  const proposalFinalSubtotal = $("#proposalFinalSubtotal");
+  const proposalState = $("#proposalState");
+
+  const proposalMoney = (value) =>
+    new Intl.NumberFormat("es-VE", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0
+    }).format(value);
+
+  const upsertProposalItem = (item) => {
+    const existing = proposalSelections.findIndex((entry) => entry.id === item.id);
+    if (existing >= 0) proposalSelections.splice(existing, 1, item);
+    else proposalSelections.push(item);
+    renderProposal();
+  };
+
+  const removeProposalItem = (id) => {
+    const index = proposalSelections.findIndex((entry) => entry.id === id);
+    if (index >= 0) proposalSelections.splice(index, 1);
+    renderProposal();
+  };
+
+  const renderProposal = () => {
+    const subtotal = proposalSelections.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+    const count = proposalSelections.length;
+    if (proposalCount) proposalCount.textContent = `${count} ${count === 1 ? "activo" : "activos"}`;
+    if (proposalSubtotal) proposalSubtotal.textContent = proposalMoney(subtotal);
+    if (proposalFinalSubtotal) proposalFinalSubtotal.textContent = proposalMoney(subtotal);
+    if (proposalState) proposalState.textContent = count ? "PROPUESTA ACTIVA" : "EN CONSTRUCCIÓN";
+    if (proposalEmpty) proposalEmpty.hidden = count > 0;
+    if (proposalFinalEmpty) proposalFinalEmpty.hidden = count > 0;
+
+    const html = proposalSelections.map((item) => `
+      <div class="proposal-item">
+        <div>
+          <strong>${item.label}</strong>
+          <span>${item.note || item.source || "Activo comercial"}</span>
+        </div>
+        <div class="proposal-item-value">
+          <b>${item.price ? proposalMoney(item.price) : "Por definir"}</b>
+          <button type="button" class="proposal-remove" data-remove-proposal="${item.id}" aria-label="Quitar ${item.label}">×</button>
+        </div>
+      </div>
+    `).join("");
+
+    if (proposalItems) proposalItems.innerHTML = html;
+    if (proposalFinalItems) proposalFinalItems.innerHTML = html;
+
+    $("[data-remove-proposal]").forEach((button) => {
+      button.addEventListener("click", () => removeProposalItem(button.dataset.removeProposal));
+    });
+  };
+
+  renderProposal();
+
   // Module 01 · Commercial map + live pricing.
   const commercialTargets = $(".plan-zone, .stand-cluster");
   const standArea = $("#standArea");
@@ -425,9 +489,28 @@
     const area = Number(standArea?.value || 6);
     const rate = area >= 6 ? 1000 : 1200;
     const days = Number(wifiDays?.value || 1);
+    const spacePrice = area * rate;
+    const wifiPrice = days * 1000;
+
+    upsertProposalItem({
+      id: "map-space",
+      label: `${selectedCommercialZone} · ${area} m²`,
+      note: `${proposalMoney(rate)} por m² · referencia preliminar`,
+      price: spacePrice,
+      source: "Mapa comercial"
+    });
+
+    upsertProposalItem({
+      id: "wifi",
+      label: `Patrocinio de la red Wi-Fi · ${days} ${days === 1 ? "día" : "días"}`,
+      note: "Nombre de red y clave patrocinables",
+      price: wifiPrice,
+      source: "Mapa comercial"
+    });
+
     if (selectionFeedback) {
       selectionFeedback.textContent =
-        `✓ ${selectedCommercialZone}: ${area} m² · ${money(area * rate)}. Wi-Fi ${days} día(s): ${money(days * 1000)}.`;
+        `✓ Agregado a la propuesta: ${selectedCommercialZone} (${money(spacePrice)}) + Wi-Fi (${money(wifiPrice)}).`;
     }
   });
 
@@ -442,22 +525,22 @@
     });
   });
 
-  // Sponsor strategy builder.
+  // Configurador de patrocinio conectado a la propuesta final.
   const plans = {
     visibility: {
       title: "Dominio de visibilidad",
-      text: "Una combinación para maximizar presencia desde la entrada, el venue y el entorno digital.",
-      items: ["Stand VIP / Foyer", "Immersive Entrance", "App Takeover", "Smart Banner"]
+      text: "Una combinación para maximizar presencia desde la entrada, los espacios físicos y el entorno digital.",
+      items: ["Foyer o stand premium", "Entrada Inmersiva SVU", "Presencia destacada en la App", "Banner inteligente"]
     },
     launch: {
-      title: "Lanzamiento 360°",
+      title: "Lanzamiento integral",
       text: "Presentación de producto con demostración, ciencia y frecuencia de marca.",
-      items: ["Stand Oro", "Immersive Entrance", "Simposio patrocinado", "App Takeover", "Sponsored Push"]
+      items: ["Stand comercial", "Entrada Inmersiva SVU", "Simposio patrocinado", "Presencia destacada en la App", "Notificación patrocinada"]
     },
     leads: {
-      title: "Lead Generation",
+      title: "Captación de contactos",
       text: "Convierte tráfico físico y digital en oportunidades de contacto medibles.",
-      items: ["Stand comercial", "QR / NFC", "Lead Capture", "Exhibitor Profile", "Sponsor Impact Report"]
+      items: ["Stand comercial", "QR / NFC", "Captación de contactos", "Perfil comercial", "Informe de impacto"]
     },
     education: {
       title: "Autoridad científica",
@@ -465,13 +548,16 @@
       items: ["Simposio patrocinado", "Taller precongreso", "Sesión científica", "Programa digital"]
     },
     networking: {
-      title: "Relacionamiento premium",
-      text: "Crea oportunidades de conversación alrededor de momentos sociales y hospitality.",
-      items: ["Hospitality", "Coffee Break", "Cóctel de bienvenida", "Exhibitor Profile"]
+      title: "Relacionamiento de alto valor",
+      text: "Crea oportunidades de conversación alrededor de momentos sociales y de hospitalidad.",
+      items: ["Sala de hospitalidad", "Pausa de café", "Cóctel de bienvenida", "Perfil comercial"]
     }
   };
 
+  let activePlanKey = "visibility";
+
   const renderPlan = (key) => {
+    activePlanKey = key;
     const plan = plans[key] || plans.visibility;
     $("#planTitle").textContent = plan.title;
     $("#planText").textContent = plan.text;
@@ -490,8 +576,50 @@
   renderPlan("visibility");
 
   $("#planCTA")?.addEventListener("click", () => {
-    const key = $(".goal.active")?.dataset.goal || "visibility";
-    openModal(plans[key].items[0]);
+    const plan = plans[activePlanKey] || plans.visibility;
+
+    // Replace only configurator-derived items, preserving map selections.
+    [...proposalSelections]
+      .filter((item) => item.source === "Configurador")
+      .forEach((item) => removeProposalItem(item.id));
+
+    plan.items.forEach((label, index) => {
+      upsertProposalItem({
+        id: `plan-${activePlanKey}-${index}`,
+        label,
+        note: `${plan.title} · valor sujeto a aprobación`,
+        price: null,
+        source: "Configurador"
+      });
+    });
+
+    const button = $("#planCTA");
+    if (button) {
+      const original = "Agregar esta combinación a la propuesta";
+      button.textContent = "Combinación agregada ✓";
+      setTimeout(() => (button.textContent = original), 1500);
+    }
+    $("#proposalPreview")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+
+  $("#copyProposal")?.addEventListener("click", async (event) => {
+    const subtotal = proposalSelections.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+    const lines = [
+      "PROPUESTA COMERCIAL PRELIMINAR · SVU 2027",
+      "",
+      ...proposalSelections.map((item) =>
+        `• ${item.label} — ${item.price ? proposalMoney(item.price) : "Por definir"}`
+      ),
+      "",
+      `Subtotal con valores conocidos: ${proposalMoney(subtotal)}`,
+      "Nota: los activos sin tarifa aprobada no están incluidos en el subtotal. Disponibilidad y condiciones finales sujetas a validación de SVU."
+    ];
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      const old = event.currentTarget.textContent;
+      event.currentTarget.textContent = "Resumen copiado ✓";
+      setTimeout(() => (event.currentTarget.textContent = old), 1400);
+    } catch {}
   });
 
   // Lead summary + email action.
