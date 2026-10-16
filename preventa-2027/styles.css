@@ -2793,3 +2793,204 @@ img,canvas,video,svg{
     padding:64px 0 96px;
   }
 }
+
+
+/* =========================================================
+   TÚNEL — FALLBACK VISUAL MÓVIL / WEBGL
+   ========================================================= */
+.tunnel-fallback-scene{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.15),transparent 35%),
+    linear-gradient(135deg,#d8d0c5 0%,#b7aa9e 46%,#8f8278 100%);
+  perspective:900px;
+}
+.hotel-tunnel-stage canvas{
+  z-index:2;
+}
+.hotel-tunnel-stage.three-ready .tunnel-fallback-scene{
+  opacity:0;
+  visibility:hidden;
+}
+.fallback-led-wall{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:37%;
+  padding:15% 4% 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  color:#fff;
+  background:
+    radial-gradient(circle at 45% 28%,rgba(255,210,58,.45),transparent 18%),
+    linear-gradient(160deg,#062a62,#0b5ac0 62%,#09264e);
+  box-shadow:inset -10px 0 28px rgba(0,0,0,.15);
+  transform-origin:left center;
+  transform:skewY(-1deg);
+}
+.fallback-logo{
+  font-family:"Manrope",sans-serif;
+  font-size:clamp(2rem,8vw,5rem);
+  font-weight:900;
+  color:#e6bf45;
+  letter-spacing:-.05em;
+  text-shadow:0 0 28px rgba(255,207,61,.38);
+}
+.fallback-led-wall small{
+  margin-top:6px;
+  max-width:180px;
+  font-size:.5rem;
+  letter-spacing:.12em;
+  line-height:1.5;
+}
+.fallback-led-wall b{
+  margin-top:12px;
+  font-size:.72rem;
+  letter-spacing:.16em;
+}
+.fallback-ceiling{
+  position:absolute;
+  left:0;
+  right:0;
+  top:-2%;
+  height:31%;
+  clip-path:polygon(0 0,100% 0,74% 100%,25% 100%);
+  background:
+    linear-gradient(100deg,rgba(228,187,69,.7),transparent 22%,rgba(255,255,255,.22) 49%,transparent 72%),
+    linear-gradient(180deg,#103d79,#0a2852);
+  filter:saturate(1.05);
+}
+.fallback-floor{
+  position:absolute;
+  left:11%;
+  right:7%;
+  bottom:-5%;
+  height:61%;
+  clip-path:polygon(23% 0,77% 0,100% 100%,0 100%);
+  background:
+    repeating-linear-gradient(90deg,transparent 0 17%,rgba(255,255,255,.18) 17.2% 17.6%,transparent 17.8% 34%),
+    linear-gradient(180deg,#c7bdb3,#8f857d);
+  box-shadow:inset 0 25px 35px rgba(255,255,255,.2);
+}
+.fallback-right-wall{
+  position:absolute;
+  top:20%;
+  right:0;
+  bottom:0;
+  width:29%;
+  clip-path:polygon(30% 0,100% 0,100% 100%,0 100%);
+  background:
+    repeating-linear-gradient(180deg,transparent 0 17%,rgba(76,62,54,.16) 17.3% 18%,transparent 18.2% 36%),
+    linear-gradient(180deg,#c9bbaa,#9e8f83);
+}
+.fallback-doorway{
+  position:absolute;
+  z-index:3;
+  left:38%;
+  right:22%;
+  top:34%;
+  height:46%;
+  padding:10% 5% 0;
+  border:8px solid #443b35;
+  border-bottom:0;
+  background:linear-gradient(180deg,#332d2b,#171a20);
+  box-shadow:0 18px 48px rgba(0,0,0,.28);
+}
+.fallback-stage-screen{
+  height:42%;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  background:linear-gradient(145deg,#082f6e,#0f69cb);
+  color:#fff;
+  text-align:center;
+}
+.fallback-stage-screen strong{
+  color:#e3bc46;
+  font-size:clamp(.8rem,3vw,1.5rem);
+}
+.fallback-stage-screen span{
+  margin-top:3px;
+  font-size:.45rem;
+}
+.fallback-chairs{
+  position:absolute;
+  left:8%;
+  right:8%;
+  bottom:5%;
+  height:34%;
+  background:
+    radial-gradient(ellipse at 10% 65%,#2b3037 0 5%,transparent 5.7%),
+    radial-gradient(ellipse at 28% 65%,#2b3037 0 5%,transparent 5.7%),
+    radial-gradient(ellipse at 46% 65%,#2b3037 0 5%,transparent 5.7%),
+    radial-gradient(ellipse at 64% 65%,#2b3037 0 5%,transparent 5.7%),
+    radial-gradient(ellipse at 82% 65%,#2b3037 0 5%,transparent 5.7%);
+}
+.fallback-demo-running .fallback-led-wall{
+  animation:fallback-led-pulse 3.1s ease-in-out infinite alternate;
+}
+.fallback-demo-running .fallback-ceiling{
+  animation:fallback-ceiling-shift 3.6s linear infinite;
+}
+.fallback-demo-running .fallback-stage-screen{
+  animation:fallback-stage-pulse 2.8s ease-in-out infinite alternate;
+}
+@keyframes fallback-led-pulse{
+  from{filter:saturate(.95) brightness(.94)}
+  to{filter:saturate(1.2) brightness(1.15)}
+}
+@keyframes fallback-ceiling-shift{
+  0%{filter:hue-rotate(0deg) brightness(.95)}
+  50%{filter:hue-rotate(12deg) brightness(1.15)}
+  100%{filter:hue-rotate(0deg) brightness(.95)}
+}
+@keyframes fallback-stage-pulse{
+  from{box-shadow:0 0 0 rgba(16,110,220,0)}
+  to{box-shadow:0 0 34px rgba(16,110,220,.55)}
+}
+
+@media(max-width:680px){
+  .hotel-tunnel-stage{
+    min-height:360px!important;
+    height:360px!important;
+  }
+  .hotel-tunnel-stage canvas,
+  .tunnel-fallback-scene{
+    height:100%!important;
+  }
+  .canvas-topline{
+    left:12px!important;
+    right:12px!important;
+    top:12px!important;
+  }
+  .canvas-topline .canvas-label{
+    max-width:78%;
+    padding:8px 10px!important;
+    font-size:.62rem!important;
+  }
+  .tunnel-stage-caption{
+    padding:10px 12px!important;
+  }
+  .tunnel-stage-caption strong{
+    font-size:.78rem!important;
+  }
+  .tunnel-stage-caption span{
+    font-size:.62rem!important;
+  }
+  .fallback-doorway{
+    left:39%;
+    right:17%;
+    top:33%;
+    height:48%;
+    border-width:5px;
+  }
+}
