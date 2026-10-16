@@ -365,8 +365,74 @@
     markVenueInterest.classList.add("is-marked");
   });
 
+  // Module 01 · Commercial map + live pricing.
+  const commercialTargets = $(".plan-zone, .stand-node");
+  const standArea = $("#standArea");
+  const standAreaValue = $("#standAreaValue");
+  const rateApplied = $("#rateApplied");
+  const spaceTotal = $("#spaceTotal");
+  const wifiDays = $("#wifiDays");
+  const wifiTotal = $("#wifiTotal");
+  const selectionFeedback = $("#selectionFeedback");
+  let selectedCommercialZone = "Foyer";
+
+  const money = (value) =>
+    new Intl.NumberFormat("es-VE", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0
+    }).format(value);
+
+  const updateCommercialPrice = () => {
+    if (!standArea) return;
+    const area = Number(standArea.value || 6);
+    const rate = area >= 6 ? 1000 : 1200;
+    if (standAreaValue) standAreaValue.textContent = `${area} m²`;
+    if (rateApplied) rateApplied.textContent = `${money(rate)} / m²`;
+    if (spaceTotal) spaceTotal.textContent = money(area * rate);
+  };
+
+  const updateWifiPrice = () => {
+    const days = Number(wifiDays?.value || 1);
+    if (wifiTotal) wifiTotal.textContent = money(days * 1000);
+  };
+
+  commercialTargets.forEach((target) => {
+    target.addEventListener("click", () => {
+      commercialTargets.forEach((item) => item.classList.remove("active"));
+      target.classList.add("active");
+
+      const stand = target.dataset.stand ? ` S${target.dataset.stand}` : "";
+      selectedCommercialZone = `${target.dataset.zone || "Espacio"}${stand}`;
+
+      if ($("#zoneTitle")) $("#zoneTitle").textContent = selectedCommercialZone;
+      if ($("#zoneDescription")) $("#zoneDescription").textContent = target.dataset.desc || "";
+      if ($("#zoneMeta")) $("#zoneMeta").textContent = target.dataset.meta || "Información por validar";
+
+      if (target.dataset.zone === "Stand comercial" && standArea) {
+        standArea.value = "6";
+        updateCommercialPrice();
+      }
+    });
+  });
+
+  standArea?.addEventListener("input", updateCommercialPrice);
+  wifiDays?.addEventListener("change", updateWifiPrice);
+  updateCommercialPrice();
+  updateWifiPrice();
+
+  $("#addCommercialSelection")?.addEventListener("click", () => {
+    const area = Number(standArea?.value || 6);
+    const rate = area >= 6 ? 1000 : 1200;
+    const days = Number(wifiDays?.value || 1);
+    if (selectionFeedback) {
+      selectionFeedback.textContent =
+        `✓ ${selectedCommercialZone}: ${area} m² · ${money(area * rate)}. Wi-Fi ${days} día(s): ${money(days * 1000)}.`;
+    }
+  });
+
   // Venue explorer.
-  const zones = $$(".zone");
+  const zones = $(".zone");
   zones.forEach((zone) => {
     zone.addEventListener("click", () => {
       zones.forEach((item) => item.classList.remove("active"));
