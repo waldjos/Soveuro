@@ -2994,3 +2994,261 @@ img,canvas,video,svg{
     border-width:5px;
   }
 }
+
+
+/* =========================================================
+   ARCO INMERSIVO SVU — BASADO EN EL ACCESO REAL
+   ========================================================= */
+.arch-section{
+  background:
+    radial-gradient(circle at 82% 12%,rgba(23,105,255,.08),transparent 26rem),
+    linear-gradient(180deg,#ffffff,#f7fbff);
+}
+.arch-wrap{
+  grid-template-columns:minmax(0,1.45fr) minmax(330px,.55fr);
+  gap:18px;
+}
+.arch-stage{
+  min-height:610px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#e4ddd5,#c6bbb0);
+  border:1px solid #cbc1b8;
+  border-radius:28px;
+}
+.arch-stage canvas{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  width:100%!important;
+  height:100%!important;
+}
+.arch-stage.three-ready .arch-fallback{
+  opacity:0;
+  visibility:hidden;
+}
+.arch-stage-caption{
+  max-width:460px;
+}
+.arch-control-panel{
+  display:flex;
+  flex-direction:column;
+}
+.arch-mode-buttons{
+  grid-template-columns:repeat(2,1fr);
+}
+.arch-mode-buttons .motion-mode:last-child{
+  grid-column:1/-1;
+}
+.arch-benefits{
+  display:grid;
+  gap:8px;
+  margin-top:18px;
+}
+.arch-benefits>div{
+  padding:12px 13px;
+  border:1px solid #dce6f0;
+  border-radius:13px;
+  background:#fbfdff;
+}
+.arch-benefits strong,
+.arch-benefits span{
+  display:block;
+}
+.arch-benefits strong{
+  color:#17385f;
+  font-size:.75rem;
+}
+.arch-benefits span{
+  margin-top:4px;
+  color:#7b8da3;
+  font-size:.66rem;
+  line-height:1.35;
+}
+
+/* Compatible visual fallback, matching the photographed portal geometry. */
+.arch-fallback{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  overflow:hidden;
+  background:linear-gradient(180deg,#ded7d0 0 26%,#c3b8ad 26% 100%);
+  transition:opacity .25s ease,visibility .25s ease;
+}
+.arch-fallback-ceiling{
+  position:absolute;
+  inset:0 0 57% 0;
+  background:
+    radial-gradient(circle at 12% 30%,#fff 0 7px,#9e9995 8px 10px,transparent 11px),
+    radial-gradient(circle at 32% 19%,#fff 0 7px,#9e9995 8px 10px,transparent 11px),
+    radial-gradient(circle at 53% 26%,#fff 0 7px,#9e9995 8px 10px,transparent 11px),
+    radial-gradient(circle at 74% 16%,#fff 0 7px,#9e9995 8px 10px,transparent 11px),
+    radial-gradient(circle at 92% 31%,#fff 0 7px,#9e9995 8px 10px,transparent 11px),
+    linear-gradient(180deg,#e7e1db,#d4cbc3);
+}
+.arch-fallback-floor{
+  position:absolute;
+  inset:43% 0 0;
+  background:
+    repeating-linear-gradient(18deg,rgba(73,72,70,.16) 0 1px,transparent 1px 18px),
+    repeating-linear-gradient(-21deg,rgba(73,72,70,.1) 0 1px,transparent 1px 22px),
+    linear-gradient(180deg,#ddd5cd,#b7aba1);
+}
+.arch-fallback-top-screen,
+.arch-fallback-left-screen,
+.arch-fallback-right-screen{
+  position:absolute;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:10px;
+  overflow:hidden;
+  text-align:center;
+  color:#fff;
+  background:
+    radial-gradient(circle at 72% 22%,rgba(255,216,58,.22),transparent 22%),
+    linear-gradient(145deg,#061f4d,#0b5fc7 64%,#071f48);
+  border:5px solid #4f4a45;
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
+.arch-fallback-top-screen{
+  left:24%;
+  right:24%;
+  top:25%;
+  height:13%;
+}
+.arch-fallback-top-screen strong{
+  font-family:"Manrope",sans-serif;
+  color:#fff;
+  font-size:clamp(.72rem,2vw,1.2rem);
+  letter-spacing:.02em;
+}
+.arch-fallback-left-screen,
+.arch-fallback-right-screen{
+  top:36%;
+  bottom:17%;
+  width:12%;
+}
+.arch-fallback-left-screen{left:24%}
+.arch-fallback-right-screen{right:24%}
+.arch-fallback-left-screen b,
+.arch-fallback-right-screen b{
+  color:#e3bb45;
+  font-family:"Manrope",sans-serif;
+  font-size:clamp(.85rem,2.5vw,1.45rem);
+}
+.arch-fallback-left-screen span,
+.arch-fallback-right-screen span{
+  margin-top:8px;
+  font-size:.54rem;
+  line-height:1.35;
+}
+.arch-fallback-door{
+  position:absolute;
+  z-index:2;
+  left:36%;
+  right:36%;
+  top:38%;
+  bottom:16%;
+  background:linear-gradient(180deg,#594f48,#2c3035);
+  border:5px solid #4a443f;
+  box-shadow:inset 0 10px 20px rgba(255,255,255,.08);
+}
+.arch-fallback-desk{
+  position:absolute;
+  z-index:5;
+  left:53%;
+  bottom:22%;
+  width:9%;
+  height:16%;
+  border-radius:50% 50% 12% 12%;
+  background:linear-gradient(180deg,#e6e7e9 0 12%,#8e9398 12% 100%);
+  box-shadow:0 7px 16px rgba(0,0,0,.17);
+}
+.arch-fallback[data-mode="sponsor"] .arch-fallback-top-screen,
+.arch-fallback[data-mode="sponsor"] .arch-fallback-left-screen,
+.arch-fallback[data-mode="sponsor"] .arch-fallback-right-screen{
+  filter:hue-rotate(16deg) saturate(1.15);
+}
+.arch-fallback[data-mode="registration"] .arch-fallback-left-screen{
+  background:
+    repeating-conic-gradient(#071f4b 0 25%,#fff 0 50%) 50%/24px 24px;
+}
+.arch-fallback[data-mode="agenda"] .arch-fallback-top-screen{
+  background:linear-gradient(145deg,#062655,#1577d3);
+}
+.arch-stage.fallback-only .arch-fallback{
+  opacity:1;
+  visibility:visible;
+}
+.arch-stage.fallback-only canvas{display:none}
+
+/* Keep the fallback animated when Three.js is unavailable. */
+.arch-stage.fallback-demo-running .arch-fallback-top-screen{
+  animation:arch-screen-pulse 1.6s ease-in-out infinite alternate;
+}
+.arch-stage.fallback-demo-running .arch-fallback-left-screen{
+  animation:arch-screen-pulse 1.9s .2s ease-in-out infinite alternate;
+}
+.arch-stage.fallback-demo-running .arch-fallback-right-screen{
+  animation:arch-screen-pulse 2.1s .4s ease-in-out infinite alternate;
+}
+@keyframes arch-screen-pulse{
+  from{filter:brightness(.92) saturate(.96)}
+  to{filter:brightness(1.17) saturate(1.16)}
+}
+
+@media(max-width:1180px){
+  .arch-wrap{
+    grid-template-columns:1fr;
+  }
+  .arch-stage{min-height:560px}
+  .arch-control-panel{padding:24px}
+}
+@media(max-width:680px){
+  .arch-section .section-heading{
+    margin-bottom:24px!important;
+  }
+  .arch-stage{
+    height:380px!important;
+    min-height:380px!important;
+    border-radius:22px;
+  }
+  .arch-fallback-top-screen{
+    left:19%;
+    right:19%;
+    top:24%;
+    height:14%;
+  }
+  .arch-fallback-left-screen,
+  .arch-fallback-right-screen{
+    top:36%;
+    bottom:16%;
+    width:15%;
+  }
+  .arch-fallback-left-screen{left:19%}
+  .arch-fallback-right-screen{right:19%}
+  .arch-fallback-door{
+    left:34%;
+    right:34%;
+  }
+  .arch-stage-caption{
+    left:10px!important;
+    right:10px!important;
+    bottom:10px!important;
+    max-width:none!important;
+  }
+  .arch-mode-buttons{
+    grid-template-columns:1fr!important;
+  }
+  .arch-mode-buttons .motion-mode:last-child{
+    grid-column:auto;
+  }
+  .arch-demo-timeline{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .arch-demo-timeline span:last-child{
+    grid-column:1/-1;
+  }
+}
