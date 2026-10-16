@@ -119,7 +119,7 @@
 
           <div class="hero-actions">
             <a class="btn btn-primary" href="#oportunidades">Explorar patrocinios →</a>
-            <a class="btn btn-secondary" href="#tunnel">Ver experiencia 3D</a>
+            <a class="btn btn-secondary" href="#tunnel">Ver arco interactivo</a>
           </div>
         </div>
 
@@ -298,65 +298,84 @@
         <div class="section-heading reveal">
           <div>
             <span class="eyebrow">Arco Inmersivo SVU</span>
-            <h2>La entrada al salón se convierte en un <span class="accent-blue">activo digital.</span></h2>
+            <h2>La misma entrada. <span class="accent-blue">Contenido que cambia.</span></h2>
           </div>
           <p>
-            Basado en la entrada real que se utilizará como referencia: una pantalla horizontal superior y dos
-            pantallas verticales laterales enmarcan el acceso sin bloquear la circulación. El contenido puede cambiar
-            durante la jornada entre identidad SVU, patrocinio, registro y agenda.
+            La estructura permanece exactamente igual durante todo el Congreso. Lo que cambia son sus tres pantallas:
+            bienvenida institucional, presencia del patrocinante, registro con QR o información de agenda.
           </p>
         </div>
 
-        <div class="three-wrap arch-wrap reveal">
-          <div class="three-canvas hotel-tunnel-stage arch-stage">
-            <div class="canvas-topline">
-              <span class="canvas-label">Simulación 3D · arco digital en acceso real al salón</span>
-              <span class="tunnel-live"><i></i> CONTENIDO DINÁMICO</span>
+        <div class="arch-photo-layout reveal">
+          <div class="arch-photo-stage" id="archPhotoStage" data-mode="welcome">
+            <img
+              src="https://raw.githubusercontent.com/waldjos/Soveuro/preventa-2027/preventa-2027/assets/arco-svu-2027.webp"
+              alt="Arco Inmersivo SVU instalado en el acceso al salón"
+              class="arch-base-photo"
+              width="1448"
+              height="1086"
+              loading="eager"
+              decoding="async"
+            >
+
+            <div class="arch-screen arch-screen-top" aria-live="polite">
+              <div class="arch-screen-motion"></div>
+              <div class="arch-screen-content">
+                <strong id="archTopTitle">BIENVENIDOS</strong>
+                <span id="archTopSubtitle">SVU 2027</span>
+              </div>
             </div>
 
-            <div class="arch-fallback" id="tunnelFallback" aria-hidden="true">
-              <div class="arch-fallback-ceiling"></div>
-              <div class="arch-fallback-floor"></div>
-              <div class="arch-fallback-left-screen"><b>SVU</b><span>CONGRESO 2027</span></div>
-              <div class="arch-fallback-top-screen"><strong>BIENVENIDOS · SVU 2027</strong></div>
-              <div class="arch-fallback-right-screen"><b>SVU</b><span>CIENCIA · CONEXIONES · IMPACTO</span></div>
-              <div class="arch-fallback-door"></div>
-              <div class="arch-fallback-desk"></div>
+            <div class="arch-screen arch-screen-left">
+              <div class="arch-screen-motion"></div>
+              <div class="arch-screen-content vertical">
+                <strong id="archLeftTitle">SVU</strong>
+                <span id="archLeftSubtitle">CONGRESO VENEZOLANO DE UROLOGÍA 2027</span>
+              </div>
+              <div class="arch-qr" id="archQr" hidden aria-label="Código QR demostrativo">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              </div>
             </div>
 
-            <canvas id="tunnelCanvas" aria-label="Simulación 3D interactiva del Arco Inmersivo SVU en el acceso al salón"></canvas>
+            <div class="arch-screen arch-screen-right">
+              <div class="arch-screen-motion"></div>
+              <div class="arch-screen-content vertical">
+                <strong id="archRightTitle">SVU</strong>
+                <span id="archRightSubtitle">CIENCIA · CONEXIONES · IMPACTO</span>
+              </div>
+            </div>
 
-            <div class="tunnel-stage-caption arch-stage-caption">
-              <strong>Arco Inmersivo SVU</strong>
-              <span>Pantalla superior + 2 pantallas laterales · acceso libre al salón</span>
+            <div class="arch-photo-status">
+              <span class="arch-live-dot"></span>
+              <strong id="archModeLabel">Bienvenida</strong>
             </div>
           </div>
 
-          <aside class="three-panel tunnel-control-panel arch-control-panel">
-            <span class="eyebrow">Simulador comercial</span>
-            <h3>Una misma estructura, cuatro usos.</h3>
+          <aside class="three-panel arch-control-panel">
+            <span class="eyebrow">Demostración interactiva</span>
+            <h3>Las pantallas cambian sin modificar el montaje.</h3>
             <p>
-              Cambia el contenido de las tres pantallas para mostrar cómo el arco puede acompañar distintos momentos
-              del Congreso sin modificar físicamente el montaje.
+              Selecciona un momento del Congreso o reproduce la secuencia completa para mostrar cómo una misma
+              estructura puede tener varios usos comerciales durante el día.
             </p>
 
-            <div class="tunnel-auto-demo arch-auto-demo">
+            <div class="arch-auto-demo">
               <button class="btn btn-primary full-btn" id="startTunnelDemo" type="button">▶ Iniciar demostración automática</button>
               <div class="demo-timeline arch-demo-timeline" id="demoTimeline" aria-live="polite">
-                <span class="active" data-step="0">Institucional</span>
-                <span data-step="1">Bienvenida</span>
+                <span class="active" data-step="0">Bienvenida</span>
+                <span data-step="1">Institucional</span>
                 <span data-step="2">Patrocinante</span>
                 <span data-step="3">Registro</span>
                 <span data-step="4">Agenda</span>
               </div>
-              <small id="demoStatus">Secuencia aproximada: 17 segundos · cambia contenido y punto de vista automáticamente.</small>
+              <small id="demoStatus">Secuencia aproximada: 17 segundos.</small>
             </div>
 
             <div class="tunnel-control-group">
               <label class="control-label">CONTENIDO EN PANTALLAS</label>
               <div class="motion-buttons arch-mode-buttons" role="group" aria-label="Seleccionar contenido del arco">
-                <button class="motion-mode active" type="button" data-motion="institutional">Institucional</button>
-                <button class="motion-mode" type="button" data-motion="welcome">Bienvenida</button>
+                <button class="motion-mode active" type="button" data-motion="welcome">Bienvenida</button>
+                <button class="motion-mode" type="button" data-motion="institutional">Institucional</button>
                 <button class="motion-mode" type="button" data-motion="sponsor">Patrocinante</button>
                 <button class="motion-mode" type="button" data-motion="registration">Registro / QR</button>
                 <button class="motion-mode" type="button" data-motion="agenda">Agenda</button>
@@ -364,18 +383,9 @@
             </div>
 
             <div class="tunnel-control-group">
-              <label class="control-label">VISTA</label>
-              <div class="camera-buttons" role="group" aria-label="Seleccionar vista del arco">
-                <button class="camera-mode active" type="button" data-camera="front">Frontal</button>
-                <button class="camera-mode" type="button" data-camera="left">Lateral</button>
-                <button class="camera-mode" type="button" data-camera="inside">Desde el acceso</button>
-              </div>
-            </div>
-
-            <div class="tunnel-control-group">
               <label class="control-label">COLOR DE CAMPAÑA</label>
               <div class="theme-buttons">
-                <button class="theme-dot theme-blue" data-color="#0b4fa8" aria-label="Azul SVU"></button>
+                <button class="theme-dot theme-blue active" data-color="#0b4fa8" aria-label="Azul SVU"></button>
                 <button class="theme-dot theme-yellow" data-color="#d5aa18" aria-label="Dorado SVU"></button>
                 <button class="theme-dot theme-red" data-color="#ef4056" aria-label="Rojo"></button>
                 <button class="theme-dot theme-purple" data-color="#7b61ff" aria-label="Morado"></button>
@@ -383,14 +393,9 @@
             </div>
 
             <div class="arch-benefits">
-              <div><strong>Pantalla superior</strong><span>Bienvenida, patrocinio principal y agenda.</span></div>
-              <div><strong>Laterales</strong><span>Campaña, QR, producto o mensajes complementarios.</span></div>
-              <div><strong>Acceso central</strong><span>Circulación libre hacia la zona comercial o salón.</span></div>
-            </div>
-
-            <div class="product-combo tunnel-concept-note">
-              <small>PROPUESTA COMERCIAL</small>
-              <strong>Puede venderse como patrocinio total del arco o por superficies digitales, sujeto a aprobación final.</strong>
+              <div><strong>Pantalla superior</strong><span>Bienvenida, agenda o patrocinio principal.</span></div>
+              <div><strong>Pantallas laterales</strong><span>Marca, producto, QR o información complementaria.</span></div>
+              <div><strong>Escena fija</strong><span>Hotel, estructura y personas permanecen exactamente iguales.</span></div>
             </div>
           </aside>
         </div>
