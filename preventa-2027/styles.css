@@ -3576,3 +3576,41 @@ img,canvas,video,svg{
     transform:none;
   }
 }
+
+
+/* Final corrections for the photo-based arch */
+.arch-qr[hidden]{display:none!important}
+.arch-screen-right .arch-screen-content.vertical span{
+  font-size:clamp(.34rem,.62vw,.62rem);
+  max-width:86%;
+  line-height:1.22;
+}
+.arch-screen-left .arch-screen-content.vertical span{
+  font-size:clamp(.38rem,.7vw,.68rem);
+}
+.arch-screen-top .arch-screen-content{
+  padding:5% 7%;
+}
+.arch-screen-top .arch-screen-content strong{
+  font-size:clamp(.72rem,2vw,1.95rem);
+}
+.arch-screen-top .arch-screen-content span{
+  font-size:clamp(.5rem,1.3vw,1.2rem);
+}
+@media(max-width:680px){
+  .arch-screen-content.vertical span{
+    letter-spacing:0;
+  }
+  .arch-screen-right .arch-screen-content.vertical span{
+    font-size:.36rem;
+  }
+  .arch-screen-left .arch-screen-content.vertical span{
+    font-size:.4rem;
+  }
+  .arch-screen-top .arch-screen-content strong{
+    font-size:.78rem;
+  }
+  .arch-screen-top .arch-screen-content span{
+    font-size:.55rem;
+  }
+}
