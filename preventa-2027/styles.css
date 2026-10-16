@@ -4292,3 +4292,156 @@ body{
   .pill-metrics{right:0;bottom:6%}
 }
 
+
+
+/* =========================================================
+   V2 MOBILE CORRECTIONS FROM REAL DEVICE REVIEW
+   ========================================================= */
+.v2-hero-bg{
+  background:
+    url("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/b1/9c/98/main-entrance.jpg?h=-1&s=1&w=1800")
+    center 42% / cover no-repeat !important;
+}
+
+/* Do not let the legacy presenter bar cover the approved presentation */
+@media(max-width:900px){
+  .presentation-controls{
+    display:none !important;
+  }
+}
+
+/* Explicit hamburger rendering */
+@media(max-width:1200px){
+  .menu-toggle{
+    width:48px !important;
+    height:48px !important;
+    padding:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    gap:5px !important;
+    border:1px solid #cbd8e6 !important;
+    border-radius:14px !important;
+    background:rgba(255,255,255,.95) !important;
+    box-shadow:0 6px 18px rgba(20,46,82,.08) !important;
+  }
+  .menu-toggle span{
+    display:block !important;
+    width:22px !important;
+    height:2px !important;
+    margin:0 !important;
+    border-radius:99px !important;
+    background:#0a2857 !important;
+  }
+  .v2-header:not(.is-scrolled) .menu-toggle span{
+    background:#0a2857 !important;
+  }
+}
+
+/* Opportunity cards: compact editorial cards on phones */
+@media(max-width:760px){
+  .v2-opportunity{
+    padding-top:92px !important;
+  }
+  .v2-opportunity .v2-heading-block{
+    padding-top:0 !important;
+  }
+  .v2-opportunity .v2-heading-block h2{
+    font-size:clamp(2.55rem,11.3vw,3.55rem) !important;
+    line-height:.98 !important;
+  }
+  .v2-opportunity-grid{
+    margin-top:28px !important;
+    gap:16px !important;
+  }
+  .v2-op-card{
+    min-height:0 !important;
+    grid-template-columns:58px 1fr !important;
+    grid-template-rows:74px 155px auto !important;
+    border-radius:22px !important;
+  }
+  .v2-op-icon{
+    width:44px !important;
+    height:44px !important;
+    margin:15px 0 10px 16px !important;
+  }
+  .v2-op-card h3{
+    margin:0 16px 0 0 !important;
+    align-self:center !important;
+    font-size:1rem !important;
+  }
+  .v2-op-card img,
+  .v2-digital-card-visual{
+    grid-column:1/-1 !important;
+    width:100% !important;
+    height:155px !important;
+    min-height:155px !important;
+    display:block !important;
+    object-fit:cover !important;
+  }
+  .v2-op-card p{
+    min-height:74px !important;
+    padding:16px 18px 18px !important;
+    display:flex !important;
+    align-items:center !important;
+    font-size:.82rem !important;
+  }
+
+  /* Hero spacing closer to the approved mockup */
+  .v2-hero{
+    min-height:100svh !important;
+    padding-top:86px !important;
+  }
+  .v2-hero-copy{
+    padding-top:10px !important;
+  }
+  .v2-hero h1{
+    font-size:clamp(3.2rem,14.5vw,4.55rem) !important;
+    line-height:.91 !important;
+  }
+  .v2-hero-copy>p{
+    max-width:94%;
+    margin-top:24px !important;
+    line-height:1.34 !important;
+  }
+  .v2-primary-action{
+    margin-top:24px !important;
+  }
+
+  /* Calendar keeps the horizontal editorial strip without oversized whitespace */
+  .v2-calendar{
+    padding-top:94px !important;
+  }
+  .v2-calendar-strip{
+    grid-template-columns:repeat(9,150px) !important;
+    gap:12px !important;
+    margin-top:24px !important;
+  }
+  .v2-date-card{
+    min-height:264px !important;
+  }
+  .v2-place-art{
+    height:112px !important;
+  }
+
+  /* SVU 365: keep benefit labels readable and clear */
+  .v2-svu365{
+    padding-top:92px !important;
+  }
+  .v2-svu365-copy>p{
+    font-size:1rem !important;
+  }
+  .v2-svu365-visual{
+    min-height:500px !important;
+  }
+}
+
+/* Desktop presenter controls can stay unobtrusive */
+@media(min-width:901px){
+  .presentation-controls{
+    transform:scale(.82);
+    transform-origin:right bottom;
+    opacity:.92;
+  }
+}
