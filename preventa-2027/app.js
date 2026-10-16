@@ -1173,6 +1173,86 @@
       ledMaterial.emissiveIntensity = ledIntensity;
     });
 
+    // Automatic 18-second demonstration for live presentations.
+    const demoButton = $("#startTunnelDemo");
+    const demoStatus = $("#demoStatus");
+    const demoSteps = $(".demo-timeline [data-step]");
+    let demoTimers = [];
+    let demoRunning = false;
+
+    const setDemoStep = (step) => {
+      demoSteps.forEach((item, index) => item.classList.toggle("active", index === step));
+    };
+
+    const clickMotion = (mode) => {
+      document.querySelector(`.motion-mode[data-motion="${mode}"]`)?.click();
+    };
+
+    const clickCamera = (mode) => {
+      document.querySelector(`.camera-mode[data-camera="${mode}"]`)?.click();
+    };
+
+    const stopTunnelDemo = (finished = false) => {
+      demoTimers.forEach(clearTimeout);
+      demoTimers = [];
+      demoRunning = false;
+      if (demoButton) demoButton.textContent = "▶ Iniciar demostración automática";
+      if (demoStatus) {
+        demoStatus.textContent = finished
+          ? "Demostración finalizada · puede repetirla o explorar manualmente."
+          : "Demostración detenida · los controles manuales siguen disponibles.";
+      }
+    };
+
+    const scheduleDemo = (delay, fn) => {
+      demoTimers.push(setTimeout(fn, reduceMotion ? Math.min(delay, 500) : delay));
+    };
+
+    const startTunnelDemo = () => {
+      if (demoRunning) {
+        stopTunnelDemo(false);
+        return;
+      }
+
+      demoRunning = true;
+      demoTimers.forEach(clearTimeout);
+      demoTimers = [];
+      if (demoButton) demoButton.textContent = "■ Detener demostración";
+      if (demoStatus) demoStatus.textContent = "Demostración en curso · identidad → bienvenida → recorrido → patrocinante → sala.";
+
+      setDemoStep(0);
+      clickMotion("institutional");
+      clickCamera("entrance");
+
+      scheduleDemo(3200, () => {
+        setDemoStep(1);
+        clickMotion("welcome");
+        clickCamera("entrance");
+      });
+
+      scheduleDemo(6900, () => {
+        setDemoStep(2);
+        clickMotion("welcome");
+        clickCamera("walk");
+      });
+
+      scheduleDemo(10700, () => {
+        setDemoStep(3);
+        clickMotion("sponsor");
+        clickCamera("walk");
+      });
+
+      scheduleDemo(14500, () => {
+        setDemoStep(4);
+        clickMotion("institutional");
+        clickCamera("ballroom");
+      });
+
+      scheduleDemo(18100, () => stopTunnelDemo(true));
+    };
+
+    demoButton?.addEventListener("click", startTunnelDemo);
+
     let lastLedDraw = -1;
     const clock = new THREE.Clock();
     const animate = () => {
