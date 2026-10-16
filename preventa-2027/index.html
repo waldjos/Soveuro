@@ -53,7 +53,7 @@
       <nav class="header-nav" aria-label="Navegación principal">
         <a href="#oportunidades" data-nav-section="oportunidades">Patrocinios</a>
         <a href="#inventario" data-nav-section="inventario">Inventario</a>
-        <a href="#tunnel" data-nav-section="tunnel">Experiencia LED</a>
+        <a href="#tunnel" data-nav-section="tunnel">Arco Digital</a>
         <a href="#app" data-nav-section="app">SoveUro App</a>
         <a href="#configurador" data-nav-section="configurador">Configurador</a>
         <a href="#mapa" data-nav-section="mapa">Plano</a>
@@ -82,7 +82,7 @@
       <nav class="mobile-nav" aria-label="Navegación móvil">
         <a href="#oportunidades"><span>01</span><strong>Patrocinios</strong><small>Opciones de presencia 2027</small></a>
         <a href="#inventario"><span>02</span><strong>Inventario</strong><small>Espacios, ciencia, digital y datos</small></a>
-        <a href="#tunnel"><span>03</span><strong>Experiencia LED</strong><small>Entrada Inmersiva SVU</small></a>
+        <a href="#tunnel"><span>03</span><strong>Arco Digital</strong><small>Arco Inmersivo SVU</small></a>
         <a href="#app"><span>04</span><strong>SoveUro App</strong><small>Inventario digital patrocinable</small></a>
         <a href="#configurador"><span>05</span><strong>Configurador</strong><small>Diseñe su combinación</small></a>
         <a href="#mapa"><span>06</span><strong>Plano</strong><small>Mapa Comercial</small></a>
@@ -128,8 +128,8 @@
           <div class="hero-media-card">
             <span class="media-icon">◇</span>
             <div>
-              <strong>Entrada Inmersiva SVU</strong>
-              <small>El túnel LED que convierte el acceso al Congreso en inventario premium.</small>
+              <strong>Arco Inmersivo SVU</strong>
+              <small>Un arco digital con pantallas que convierte el acceso al salón en inventario premium.</small>
             </div>
             <a href="#tunnel" aria-label="Ver experiencia inmersiva">→</a>
           </div>
@@ -233,7 +233,7 @@
             <div>
               <span class="visual-badge yellow">Espacios</span>
               <h3>Exposición y presencia física</h3>
-              <p>Stands comerciales, foyer, ubicaciones premium, pantallas y Entrada Inmersiva SVU.</p>
+              <p>Stands comerciales, foyer, ubicaciones premium, pantallas y Arco Inmersivo SVU.</p>
             </div>
             <a href="#mapa" class="inventory-link">Ver mapa comercial →</a>
           </article>
@@ -293,78 +293,82 @@
       </div>
     </section>
 
-    <section class="section immersive presentation-chapter" id="tunnel" data-chapter="Experiencia LED">
+    <section class="section immersive presentation-chapter arch-section" id="tunnel" data-chapter="Arco Inmersivo">
       <div class="container">
         <div class="section-heading reveal">
           <div>
-            <span class="eyebrow">Entrada Inmersiva SVU</span>
-            <h2>La entrada se convierte en un <span class="accent-blue">medio.</span></h2>
+            <span class="eyebrow">Arco Inmersivo SVU</span>
+            <h2>La entrada al salón se convierte en un <span class="accent-blue">activo digital.</span></h2>
           </div>
           <p>
-            Una pantalla LED continua en configuración L transforma el acceso al evento en un activo publicitario
-            premium. El modelo permite simular campañas de distintas marcas.
+            Basado en la entrada real que se utilizará como referencia: una pantalla horizontal superior y dos
+            pantallas verticales laterales enmarcan el acceso sin bloquear la circulación. El contenido puede cambiar
+            durante la jornada entre identidad SVU, patrocinio, registro y agenda.
           </p>
         </div>
 
-        <div class="three-wrap reveal">
-          <div class="three-canvas hotel-tunnel-stage">
+        <div class="three-wrap arch-wrap reveal">
+          <div class="three-canvas hotel-tunnel-stage arch-stage">
             <div class="canvas-topline">
-              <span class="canvas-label">Simulación 3D · ingreso realista a salón del hotel</span>
-              <span class="tunnel-live"><i></i> ANIMACIÓN ACTIVA</span>
+              <span class="canvas-label">Simulación 3D · arco digital en acceso real al salón</span>
+              <span class="tunnel-live"><i></i> CONTENIDO DINÁMICO</span>
             </div>
-            <div class="tunnel-fallback-scene" id="tunnelFallback" aria-hidden="true">
-              <div class="fallback-led-wall">
-                <span class="fallback-logo">SVU</span>
-                <small>SOCIEDAD VENEZOLANA DE UROLOGÍA</small>
-                <b>CONGRESO 2027</b>
-              </div>
-              <div class="fallback-ceiling"></div>
-              <div class="fallback-floor"></div>
-              <div class="fallback-right-wall"></div>
-              <div class="fallback-doorway">
-                <div class="fallback-stage-screen"><strong>SVU 2027</strong><span>Congreso Venezolano de Urología</span></div>
-                <div class="fallback-chairs"></div>
-              </div>
+
+            <div class="arch-fallback" id="tunnelFallback" aria-hidden="true">
+              <div class="arch-fallback-ceiling"></div>
+              <div class="arch-fallback-floor"></div>
+              <div class="arch-fallback-left-screen"><b>SVU</b><span>CONGRESO 2027</span></div>
+              <div class="arch-fallback-top-screen"><strong>BIENVENIDOS · SVU 2027</strong></div>
+              <div class="arch-fallback-right-screen"><b>SVU</b><span>CIENCIA · CONEXIONES · IMPACTO</span></div>
+              <div class="arch-fallback-door"></div>
+              <div class="arch-fallback-desk"></div>
             </div>
-            <canvas id="tunnelCanvas" aria-label="Simulación 3D interactiva del túnel LED SVU hacia un salón del Hotel Eurobuilding"></canvas>
-            <div class="tunnel-stage-caption">
-              <strong>Entrada Inmersiva SVU</strong>
-              <span>Pared LED + cielo LED + acceso directo al salón</span>
+
+            <canvas id="tunnelCanvas" aria-label="Simulación 3D interactiva del Arco Inmersivo SVU en el acceso al salón"></canvas>
+
+            <div class="tunnel-stage-caption arch-stage-caption">
+              <strong>Arco Inmersivo SVU</strong>
+              <span>Pantalla superior + 2 pantallas laterales · acceso libre al salón</span>
             </div>
           </div>
 
-          <aside class="three-panel tunnel-control-panel">
-            <span class="eyebrow">Simulador en vivo</span>
-            <h3>Entrada inmersiva a la sala</h3>
-            <p>La visualización representa un corredor del hotel que desemboca directamente en el salón. La identidad SVU se anima sobre pared y techo LED antes de revelar el escenario interior.</p>
+          <aside class="three-panel tunnel-control-panel arch-control-panel">
+            <span class="eyebrow">Simulador comercial</span>
+            <h3>Una misma estructura, cuatro usos.</h3>
+            <p>
+              Cambia el contenido de las tres pantallas para mostrar cómo el arco puede acompañar distintos momentos
+              del Congreso sin modificar físicamente el montaje.
+            </p>
 
-            <div class="tunnel-auto-demo">
+            <div class="tunnel-auto-demo arch-auto-demo">
               <button class="btn btn-primary full-btn" id="startTunnelDemo" type="button">▶ Iniciar demostración automática</button>
-              <div class="demo-timeline" id="demoTimeline" aria-live="polite">
-                <span class="active" data-step="0">Identidad SVU</span>
+              <div class="demo-timeline arch-demo-timeline" id="demoTimeline" aria-live="polite">
+                <span class="active" data-step="0">Institucional</span>
                 <span data-step="1">Bienvenida</span>
-                <span data-step="2">Recorrido</span>
-                <span data-step="3">Patrocinante</span>
-                <span data-step="4">Sala</span>
+                <span data-step="2">Patrocinante</span>
+                <span data-step="3">Registro</span>
+                <span data-step="4">Agenda</span>
               </div>
-              <small id="demoStatus">Duración aproximada: 18 segundos · puede detenerse en cualquier momento.</small>
+              <small id="demoStatus">Secuencia aproximada: 17 segundos · cambia contenido y punto de vista automáticamente.</small>
             </div>
 
             <div class="tunnel-control-group">
-              <label class="control-label">SECUENCIA VISUAL</label>
-              <div class="motion-buttons" role="group" aria-label="Seleccionar secuencia visual">
-                <button class="motion-mode active" type="button" data-motion="institutional">Identidad SVU</button>
+              <label class="control-label">CONTENIDO EN PANTALLAS</label>
+              <div class="motion-buttons arch-mode-buttons" role="group" aria-label="Seleccionar contenido del arco">
+                <button class="motion-mode active" type="button" data-motion="institutional">Institucional</button>
                 <button class="motion-mode" type="button" data-motion="welcome">Bienvenida</button>
                 <button class="motion-mode" type="button" data-motion="sponsor">Patrocinante</button>
+                <button class="motion-mode" type="button" data-motion="registration">Registro / QR</button>
+                <button class="motion-mode" type="button" data-motion="agenda">Agenda</button>
               </div>
             </div>
 
             <div class="tunnel-control-group">
-              <label class="control-label">VISTA DE PRESENTACIÓN</label>
-              <div class="camera-buttons" role="group" aria-label="Seleccionar vista de cámara">
-                <button class="camera-mode active" type="button" data-camera="entrance">Entrada</button>
-                <button class="camera-mode" type="button" data-camera="walk">Recorrido</button>
-                <button class="camera-mode" type="button" data-camera="ballroom">Sala</button>
+              <label class="control-label">VISTA</label>
+              <div class="camera-buttons" role="group" aria-label="Seleccionar vista del arco">
+                <button class="camera-mode active" type="button" data-camera="front">Frontal</button>
+                <button class="camera-mode" type="button" data-camera="left">Lateral</button>
+                <button class="camera-mode" type="button" data-camera="inside">Desde el acceso</button>
               </div>
             </div>
 
@@ -378,14 +382,15 @@
               </div>
             </div>
 
-            <div class="tunnel-control-group">
-              <label class="control-label" for="brightness">INTENSIDAD LED</label>
-              <input id="brightness" class="range" type="range" min=".45" max="2.2" value="1.25" step=".05">
+            <div class="arch-benefits">
+              <div><strong>Pantalla superior</strong><span>Bienvenida, patrocinio principal y agenda.</span></div>
+              <div><strong>Laterales</strong><span>Campaña, QR, producto o mensajes complementarios.</span></div>
+              <div><strong>Acceso central</strong><span>Circulación libre hacia la zona comercial o salón.</span></div>
             </div>
 
             <div class="product-combo tunnel-concept-note">
-              <small>CONCEPTO DE VENTA</small>
-              <strong>El patrocinante domina la transición entre foyer y salón, sin convertir el acceso en un stand.</strong>
+              <small>PROPUESTA COMERCIAL</small>
+              <strong>Puede venderse como patrocinio total del arco o por superficies digitales, sujeto a aprobación final.</strong>
             </div>
           </aside>
         </div>
@@ -527,8 +532,8 @@
           <article class="package-card naming reveal">
             <span class="package-tier">NAMING PARTNER</span><h3>Domine el momento</h3>
             <p>Máxima visibilidad para activos exclusivos y experiencias emblemáticas.</p>
-            <ul><li>Immersive Entrance</li><li>Dominio visual</li><li>SoveUro destacado</li><li>Activación a la medida</li></ul>
-            <button class="btn btn-primary openModal package-cta" data-interest="Immersive Entrance">Consultar exclusividad</button>
+            <ul><li>Arco Inmersivo SVU</li><li>Dominio visual</li><li>SoveUro destacado</li><li>Activación a la medida</li></ul>
+            <button class="btn btn-primary openModal package-cta" data-interest="Arco Inmersivo SVU">Consultar exclusividad</button>
           </article>
         </div>
       </div>
@@ -668,8 +673,8 @@
             </button>
 
             <button class="plan-zone plan-tunnel" type="button"
-              data-zone="Entrada Inmersiva SVU"
-              data-desc="Propuesta de túnel LED para la transición entre circulación del hotel y acceso al salón."
+              data-zone="Arco Inmersivo SVU"
+              data-desc="Propuesta de arco digital para la transición entre circulación del hotel y acceso al salón."
               data-meta="Activo propuesto para 2027">
               <span>Entrada Inmersiva</span><small>Acceso al salón</small>
             </button>
@@ -831,7 +836,7 @@
             <option>Stand Oro</option>
             <option>Stand Plata</option>
             <option>Stand Bronce</option>
-            <option>Immersive Entrance</option>
+            <option>Arco Inmersivo SVU</option>
             <option>Presencia Destacada en la App</option>
             <option>Simposio patrocinado</option>
             <option>Hospitality</option>
