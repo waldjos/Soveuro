@@ -366,7 +366,7 @@
   });
 
   // Module 01 · Commercial map + live pricing.
-  const commercialTargets = $(".plan-zone, .stand-node");
+  const commercialTargets = $(".plan-zone, .stand-cluster");
   const standArea = $("#standArea");
   const standAreaValue = $("#standAreaValue");
   const rateApplied = $("#rateApplied");
@@ -402,14 +402,14 @@
       commercialTargets.forEach((item) => item.classList.remove("active"));
       target.classList.add("active");
 
-      const stand = target.dataset.stand ? ` S${target.dataset.stand}` : "";
+      const stand = target.dataset.stand ? ` ${target.dataset.stand}` : "";
       selectedCommercialZone = `${target.dataset.zone || "Espacio"}${stand}`;
 
       if ($("#zoneTitle")) $("#zoneTitle").textContent = selectedCommercialZone;
       if ($("#zoneDescription")) $("#zoneDescription").textContent = target.dataset.desc || "";
       if ($("#zoneMeta")) $("#zoneMeta").textContent = target.dataset.meta || "Información por validar";
 
-      if (target.dataset.zone === "Stand comercial" && standArea) {
+      if ((target.dataset.zone || "").toLowerCase().includes("stand") && standArea) {
         standArea.value = "6";
         updateCommercialPrice();
       }
