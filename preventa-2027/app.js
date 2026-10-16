@@ -704,6 +704,21 @@
 
   // Realistic hotel corridor + dynamic LED tunnel.
   const canvas = $("#tunnelCanvas");
+  const tunnelStage = canvas?.closest(".hotel-tunnel-stage");
+  const tunnelFallback = $("#tunnelFallback");
+
+  // Compatible fallback for browsers that block the external 3D library or cannot create WebGL.
+  if (canvas && !window.THREE) {
+    tunnelStage?.classList.add("fallback-only");
+    const status = $("#demoStatus");
+    if (status) status.textContent = "Modo visual compatible activo. La animación 3D completa requiere soporte WebGL.";
+    $("#startTunnelDemo")?.addEventListener("click", () => {
+      tunnelStage?.classList.toggle("fallback-demo-running");
+      const running = tunnelStage?.classList.contains("fallback-demo-running");
+      $("#startTunnelDemo").textContent = running ? "■ Detener demostración" : "▶ Iniciar demostración automática";
+    });
+  }
+
   if (canvas && window.THREE) {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color("#d7cec2");
@@ -1276,6 +1291,9 @@
       }
 
       renderer.render(scene, camera);
+      if (!tunnelStage?.classList.contains("three-ready")) {
+        tunnelStage?.classList.add("three-ready");
+      }
     };
     drawLedCampaign(0);
     animate();
