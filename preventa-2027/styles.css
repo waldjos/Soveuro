@@ -1651,3 +1651,369 @@ body.menu-open{overflow:hidden}
     grid-template-columns:1fr;
   }
 }
+
+
+/* =========================================================
+   MODULE 01 — MAPA COMERCIAL 2027
+   ========================================================= */
+.commercial-map-module{
+  background:
+    radial-gradient(circle at 90% 8%,rgba(23,105,255,.08),transparent 24rem),
+    linear-gradient(180deg,#f7fbff,#ffffff);
+}
+.commercial-map-shell{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(340px,.6fr);
+  gap:18px;
+  align-items:stretch;
+}
+.commercial-plan{
+  position:relative;
+  min-height:720px;
+  padding:78px 24px 62px;
+  border:1px solid #cbddec;
+  border-radius:28px;
+  background:
+    linear-gradient(90deg,rgba(15,63,126,.025) 1px,transparent 1px),
+    linear-gradient(rgba(15,63,126,.025) 1px,transparent 1px),
+    #fff;
+  background-size:28px 28px;
+  box-shadow:0 18px 55px rgba(42,83,135,.1);
+  overflow:hidden;
+}
+.plan-caption{
+  position:absolute;
+  top:18px;
+  left:22px;
+  right:22px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.plan-caption strong{
+  color:var(--navy);
+  font-family:"Manrope",sans-serif;
+  font-size:1.05rem;
+}
+.plan-caption span{
+  max-width:470px;
+  color:#7d8da3;
+  text-align:right;
+  font-size:.7rem;
+  line-height:1.4;
+}
+.plan-zone{
+  position:absolute;
+  padding:14px;
+  border:1px solid #c9d9e9;
+  border-radius:16px;
+  background:#f7fbff;
+  color:var(--navy);
+  text-align:left;
+  cursor:pointer;
+  transition:.22s ease;
+  box-shadow:0 8px 22px rgba(42,83,135,.07);
+}
+.plan-zone:hover,.plan-zone.active{
+  transform:translateY(-2px);
+  border-color:#1769ff;
+  background:linear-gradient(135deg,#0d63d4,#2592ff);
+  color:#fff;
+  box-shadow:0 16px 32px rgba(23,105,255,.18);
+}
+.plan-zone span,.plan-zone small{display:block}
+.plan-zone span{font-weight:900;font-size:.78rem}
+.plan-zone small{margin-top:4px;font-size:.63rem;opacity:.74}
+.plan-caracas{left:24px;top:170px;width:22%;height:210px}
+.plan-foyer{left:33%;right:24%;bottom:92px;height:92px}
+.plan-screens{right:24px;top:200px;width:19%;height:130px}
+.plan-tunnel{right:24px;bottom:95px;width:19%;height:120px}
+.plan-plaza{
+  position:absolute;
+  top:130px;
+  left:26%;
+  right:23%;
+  bottom:205px;
+  border:2px solid #153a68;
+  border-radius:18px;
+  background:#fbfdff;
+  overflow:hidden;
+}
+.plan-stage{
+  height:66px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(90deg,#0a2f67,#0e61c8);
+  color:#fff;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.1em;
+}
+.plan-seat-grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:6px;
+  padding:18px 20px 12px;
+}
+.plan-seat-grid i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#9db1c8;
+  justify-self:center;
+}
+.plan-expo-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:10px 18px 18px;
+}
+.stand-node{
+  min-height:46px;
+  border:1px solid #6fa2d8;
+  border-radius:10px;
+  background:#eaf4ff;
+  color:#0b4fa8;
+  font-size:.67rem;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.stand-node:hover,.stand-node.active{
+  background:var(--yellow);
+  border-color:#d3a900;
+  color:#21324c;
+  transform:translateY(-1px);
+}
+.plan-plaza-label{
+  position:absolute;
+  left:50%;
+  bottom:4px;
+  transform:translateX(-50%);
+  color:#71869f;
+  font-size:.62rem;
+  letter-spacing:.12em;
+}
+.plan-flow{
+  position:absolute;
+  left:28%;
+  right:25%;
+  bottom:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  color:#68809b;
+  font-size:.65rem;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.plan-flow b{color:var(--yellow);font-size:1rem}
+
+.commercial-map-panel{
+  padding:28px;
+  border-radius:28px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+.commercial-map-panel h3{
+  margin:6px 0 8px;
+  color:var(--navy);
+  font-size:2rem;
+}
+.zone-meta{
+  display:inline-flex;
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#eef6ff;
+  color:#0b5fc7;
+  font-size:.7rem;
+  font-weight:800;
+}
+.price-simulator{
+  margin-top:24px;
+  padding:20px;
+  border-radius:20px;
+  background:linear-gradient(145deg,#f8fbff,#eef6ff);
+  border:1px solid #d7e6f4;
+}
+.price-simulator-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+}
+.price-simulator-head strong{
+  color:var(--navy);
+  font-size:1rem;
+}
+.price-badge{
+  flex:0 0 auto;
+  padding:7px 9px;
+  border-radius:999px;
+  background:var(--yellow);
+  color:#26364d;
+  font-size:.58rem;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.commercial-field{display:block;margin-top:18px}
+.commercial-field>span{
+  display:block;
+  color:#687c96;
+  font-size:.72rem;
+  font-weight:800;
+}
+.area-control{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  align-items:center;
+}
+.area-control input{width:100%;accent-color:#1769ff}
+.area-control output{
+  min-width:74px;
+  text-align:right;
+  color:var(--navy);
+  font-weight:900;
+}
+.price-breakdown{
+  display:grid;
+  gap:8px;
+  margin-top:16px;
+}
+.price-breakdown>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:11px 0;
+  border-top:1px solid #d8e6f4;
+}
+.price-breakdown span{color:#72849c;font-size:.72rem}
+.price-breakdown strong{color:var(--navy);font-size:.9rem}
+.price-breakdown .price-total strong{
+  font-size:1.35rem;
+  color:#0b5fc7;
+}
+.rate-rule{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:10px;
+}
+.rate-rule span{
+  padding:9px 10px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #dbe8f4;
+  color:#6c8099;
+  font-size:.65rem;
+}
+.rate-rule b{color:#173b69}
+.commercial-disclaimer{
+  display:block;
+  margin-top:11px;
+  color:#8a99ad;
+  line-height:1.45;
+  font-size:.62rem;
+}
+
+.wifi-offer{
+  margin-top:16px;
+  padding:18px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  grid-template-areas:
+    "icon copy days"
+    "icon copy price";
+  gap:4px 14px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#071f4b,#0b61ca);
+  color:#fff;
+}
+.wifi-icon{
+  grid-area:icon;
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:rgba(255,255,255,.12);
+  color:var(--yellow);
+  font-size:1.5rem;
+}
+.wifi-copy{grid-area:copy}
+.wifi-copy .step-label{color:#bdd6f7;margin-bottom:4px}
+.wifi-copy h4{margin:0;font-size:1rem}
+.wifi-copy p{margin:5px 0 0;color:#d6e5f8;font-size:.7rem;line-height:1.4}
+.wifi-days{grid-area:days;align-self:start}
+.wifi-days span,.wifi-price span,.wifi-price small{display:block}
+.wifi-days span,.wifi-price span{color:#c6daf3;font-size:.56rem;font-weight:800}
+.wifi-days select{
+  margin-top:4px;
+  min-width:86px;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:10px;
+  background:#fff;
+  color:#18375f;
+  font-size:.68rem;
+}
+.wifi-price{grid-area:price;align-self:end;text-align:right}
+.wifi-price strong{display:block;margin-top:2px;color:var(--yellow);font-size:1rem}
+.wifi-price small{margin-top:1px;color:#d2e2f5;font-size:.56rem}
+.selection-feedback{
+  min-height:20px;
+  margin-top:8px;
+  color:#3f719f;
+  font-size:.68rem;
+  font-weight:700;
+}
+@media(max-width:1180px){
+  .commercial-map-shell{grid-template-columns:1fr}
+  .commercial-plan{min-height:680px}
+}
+@media(max-width:760px){
+  .commercial-plan{
+    min-height:760px;
+    padding:72px 14px 50px;
+  }
+  .plan-caption{
+    left:14px;right:14px;
+    flex-direction:column;
+    gap:5px;
+  }
+  .plan-caption span{text-align:left}
+  .plan-caracas{left:14px;top:160px;width:30%;height:190px}
+  .plan-plaza{left:35%;right:14px;top:150px;bottom:260px}
+  .plan-screens{left:14px;right:auto;top:370px;width:30%;height:120px}
+  .plan-foyer{left:35%;right:14px;bottom:150px;height:86px}
+  .plan-tunnel{left:14px;right:auto;bottom:150px;width:30%;height:110px}
+  .plan-flow{left:10px;right:10px;bottom:36px;flex-wrap:wrap}
+  .plan-seat-grid{grid-template-columns:repeat(8,1fr);padding:14px}
+  .plan-expo-grid{grid-template-columns:repeat(3,1fr);padding:8px 12px 14px}
+  .stand-node{min-height:40px}
+}
+@media(max-width:520px){
+  .commercial-plan{min-height:830px}
+  .plan-caracas,.plan-screens,.plan-tunnel{
+    width:31%;
+  }
+  .plan-plaza{left:36%;right:10px}
+  .commercial-map-panel{padding:20px}
+  .rate-rule{grid-template-columns:1fr}
+  .wifi-offer{
+    grid-template-columns:auto 1fr;
+    grid-template-areas:
+      "icon copy"
+      "days days"
+      "price price";
+  }
+  .wifi-days{margin-top:10px}
+  .wifi-price{text-align:left;margin-top:8px}
+}
