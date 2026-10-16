@@ -324,6 +324,18 @@
             <h3>Entrada inmersiva a la sala</h3>
             <p>La visualización representa un corredor del hotel que desemboca directamente en el salón. La identidad SVU se anima sobre pared y techo LED antes de revelar el escenario interior.</p>
 
+            <div class="tunnel-auto-demo">
+              <button class="btn btn-primary full-btn" id="startTunnelDemo" type="button">▶ Iniciar demostración automática</button>
+              <div class="demo-timeline" id="demoTimeline" aria-live="polite">
+                <span class="active" data-step="0">Identidad SVU</span>
+                <span data-step="1">Bienvenida</span>
+                <span data-step="2">Recorrido</span>
+                <span data-step="3">Patrocinante</span>
+                <span data-step="4">Sala</span>
+              </div>
+              <small id="demoStatus">Duración aproximada: 18 segundos · puede detenerse en cualquier momento.</small>
+            </div>
+
             <div class="tunnel-control-group">
               <label class="control-label">SECUENCIA VISUAL</label>
               <div class="motion-buttons" role="group" aria-label="Seleccionar secuencia visual">
@@ -536,8 +548,28 @@
             <p id="planText">Una combinación para maximizar presencia desde la entrada hasta el entorno digital.</p>
             <div id="planItems" class="plan-items"></div>
             <div class="builder-note">Disponibilidad y valores finales 2027 sujetos a aprobación comercial.</div>
-            <button class="btn btn-primary full-btn" id="planCTA">Solicitar esta combinación</button>
+            <button class="btn btn-primary full-btn" id="planCTA">Agregar esta combinación a la propuesta</button>
           </aside>
+        </div>
+
+        <div class="proposal-preview reveal" id="proposalPreview">
+          <div class="proposal-preview-head">
+            <div>
+              <span class="step-label">03 · PROPUESTA EN CONSTRUCCIÓN</span>
+              <h3>Resumen comercial</h3>
+            </div>
+            <span class="proposal-count" id="proposalCount">0 activos</span>
+          </div>
+          <div class="proposal-empty" id="proposalEmpty">Selecciona un objetivo o agrega una oportunidad desde el mapa comercial para construir la propuesta.</div>
+          <div class="proposal-items" id="proposalItems"></div>
+          <div class="proposal-preview-footer">
+            <div>
+              <span>Subtotal conocido</span>
+              <strong id="proposalSubtotal">USD 0</strong>
+              <small>Solo suma activos con referencia económica confirmada en esta presentación.</small>
+            </div>
+            <a class="btn btn-secondary" href="#cierre">Ver propuesta final →</a>
+          </div>
         </div>
       </div>
     </section>
@@ -707,14 +739,30 @@
       </div>
     </section>
 
-    <section class="cta presentation-chapter" id="cierre" data-chapter="Cierre">
-      <div class="container cta-box reveal">
-        <div>
-          <span class="eyebrow light-eyebrow">Preventa comercial 2027</span>
-          <h2>Convierta su presencia en una experiencia que la comunidad recuerde.</h2>
-          <p>Físico + científico + digital + datos. Una sola estrategia.</p>
+    <section class="cta presentation-chapter proposal-closing" id="cierre" data-chapter="Cierre">
+      <div class="container proposal-closing-box reveal">
+        <div class="proposal-closing-head">
+          <div>
+            <span class="eyebrow light-eyebrow">Propuesta comercial preliminar · SVU 2027</span>
+            <h2>Todo lo seleccionado, en una sola propuesta.</h2>
+            <p>La presentación termina con un resumen listo para conversar, copiar o enviar a la casa comercial.</p>
+          </div>
+          <span class="proposal-state" id="proposalState">EN CONSTRUCCIÓN</span>
         </div>
-        <button class="btn btn-yellow openModal">Preparar propuesta →</button>
+
+        <div class="proposal-final-grid">
+          <div class="proposal-final-list">
+            <div class="proposal-final-empty" id="proposalFinalEmpty">Aún no has agregado activos. Usa el configurador o el mapa comercial para construir la propuesta.</div>
+            <div id="proposalFinalItems"></div>
+          </div>
+          <aside class="proposal-final-total">
+            <span>Subtotal con valores conocidos</span>
+            <strong id="proposalFinalSubtotal">USD 0</strong>
+            <small>Los activos “por definir” no se incluyen en este subtotal. La disponibilidad y condiciones finales requieren validación de SVU.</small>
+            <button class="btn btn-yellow full-btn" id="copyProposal" type="button">Copiar resumen comercial</button>
+            <button class="btn btn-secondary full-btn openModal" id="prepareProposal" type="button">Preparar solicitud formal</button>
+          </aside>
+        </div>
       </div>
     </section>
   </main>
