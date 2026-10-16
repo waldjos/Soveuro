@@ -702,410 +702,164 @@
     });
   }
 
-  // Interactive digital entrance arch based on the real access reference.
-  const canvas = $("#tunnelCanvas");
-  const archStage = canvas?.closest(".arch-stage");
-  const fallback = $("#tunnelFallback");
+  // Photo-based interactive arch: the scene stays fixed and only the three screens change.
+  const archStage = $("#archPhotoStage");
+  const archModeLabel = $("#archModeLabel");
+  const archQr = $("#archQr");
+  const archTopTitle = $("#archTopTitle");
+  const archTopSubtitle = $("#archTopSubtitle");
+  const archLeftTitle = $("#archLeftTitle");
+  const archLeftSubtitle = $("#archLeftSubtitle");
+  const archRightTitle = $("#archRightTitle");
+  const archRightSubtitle = $("#archRightSubtitle");
 
-  const setFallbackMode = (mode) => {
-    if (!fallback) return;
-    fallback.dataset.mode = mode;
-    const left = $(".arch-fallback-left-screen", fallback);
-    const top = $(".arch-fallback-top-screen", fallback);
-    const right = $(".arch-fallback-right-screen", fallback);
-
-    const content = {
-      institutional: {
-        top: "SVU · CONGRESO 2027",
-        left: ["SVU", "SOCIEDAD VENEZOLANA DE UROLOGÍA"],
-        right: ["2027", "CIENCIA · CONEXIONES · IMPACTO"]
-      },
-      welcome: {
-        top: "BIENVENIDOS AL CONGRESO VENEZOLANO DE UROLOGÍA",
-        left: ["SVU", "BIENVENIDOS"],
-        right: ["CARACAS", "HOTEL EUROBUILDING"]
-      },
-      sponsor: {
-        top: "SU MARCA × SVU 2027",
-        left: ["SU MARCA", "PRESENCIA DE ALTO IMPACTO"],
-        right: ["PATROCINANTE", "ACCESO PRINCIPAL"]
-      },
-      registration: {
-        top: "REGISTRO Y ACCESO · ESCANEE EL CÓDIGO",
-        left: ["QR", "REGÍSTRESE AQUÍ"],
-        right: ["ACCESO", "VALIDACIÓN DIGITAL"]
-      },
-      agenda: {
-        top: "PRÓXIMA ACTIVIDAD · PROGRAMA EN VIVO",
-        left: ["AGENDA", "PRÓXIMA SESIÓN"],
-        right: ["SVU 2027", "CONSULTE LA APP"]
-      }
-    }[mode] || null;
-
-    if (!content) return;
-    if (top) top.innerHTML = `<strong>${content.top}</strong>`;
-    if (left) left.innerHTML = `<b>${content.left[0]}</b><span>${content.left[1]}</span>`;
-    if (right) right.innerHTML = `<b>${content.right[0]}</b><span>${content.right[1]}</span>`;
+  const archModes = {
+    welcome: {
+      label: "Bienvenida",
+      topTitle: "BIENVENIDOS",
+      topSubtitle: "SVU 2027",
+      leftTitle: "SVU",
+      leftSubtitle: "CONGRESO VENEZOLANO DE UROLOGÍA 2027",
+      rightTitle: "SVU",
+      rightSubtitle: "CIENCIA · CONEXIONES · IMPACTO",
+      qr: false
+    },
+    institutional: {
+      label: "Institucional",
+      topTitle: "SOCIEDAD VENEZOLANA DE UROLOGÍA",
+      topSubtitle: "CONGRESO 2027",
+      leftTitle: "SVU",
+      leftSubtitle: "DESDE 1940",
+      rightTitle: "2027",
+      rightSubtitle: "CARACAS · HOTEL EUROBUILDING",
+      qr: false
+    },
+    sponsor: {
+      label: "Patrocinante",
+      topTitle: "SU MARCA × SVU 2027",
+      topSubtitle: "PRESENCIA EN EL ACCESO PRINCIPAL",
+      leftTitle: "SU MARCA",
+      leftSubtitle: "CAMPAÑA DESTACADA",
+      rightTitle: "PATROCINANTE",
+      rightSubtitle: "VISIBILIDAD DE ALTO IMPACTO",
+      qr: false
+    },
+    registration: {
+      label: "Registro / QR",
+      topTitle: "REGISTRO Y ACCESO",
+      topSubtitle: "ESCANEE EL CÓDIGO PARA CONTINUAR",
+      leftTitle: "QR",
+      leftSubtitle: "REGÍSTRESE AQUÍ",
+      rightTitle: "ACCESO",
+      rightSubtitle: "VALIDACIÓN DIGITAL",
+      qr: true
+    },
+    agenda: {
+      label: "Agenda",
+      topTitle: "PRÓXIMA ACTIVIDAD",
+      topSubtitle: "PROGRAMA EN VIVO · CONSULTE SOVEURO APP",
+      leftTitle: "AGENDA",
+      leftSubtitle: "PRÓXIMA SESIÓN",
+      rightTitle: "SVU 2027",
+      rightSubtitle: "INFORMACIÓN EN TIEMPO REAL",
+      qr: false
+    }
   };
-  setFallbackMode("institutional");
 
-  if (canvas && !window.THREE) {
-    archStage?.classList.add("fallback-only");
-    $("#demoStatus")?.replaceChildren(document.createTextNode("Modo visual compatible activo. La experiencia 3D completa requiere soporte WebGL."));
-    $$(".motion-mode").forEach((button) => {
-      button.addEventListener("click", () => {
-        $$(".motion-mode").forEach((item) => item.classList.remove("active"));
-        button.classList.add("active");
-        setFallbackMode(button.dataset.motion || "institutional");
-      });
-    });
-  }
+  let activeArchMode = "welcome";
+  let archDemoTimers = [];
+  let archDemoRunning = false;
 
-  if (canvas && window.THREE) {
-    const THREE = window.THREE;
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#d8d0c7");
-    scene.fog = new THREE.Fog(0xd8d0c7, 16, 34);
+  const applyArchMode = (mode) => {
+    const config = archModes[mode] || archModes.welcome;
+    activeArchMode = mode;
 
-    const camera = new THREE.PerspectiveCamera(
-      48,
-      Math.max(canvas.clientWidth, 1) / Math.max(canvas.clientHeight, 1),
-      0.1,
-      80
-    );
-
-    const cameraViews = {
-      front: { pos: new THREE.Vector3(0, 2.35, 10.8), look: new THREE.Vector3(0, 2.05, 0) },
-      left: { pos: new THREE.Vector3(-5.6, 2.5, 7.0), look: new THREE.Vector3(0, 2.0, 0) },
-      inside: { pos: new THREE.Vector3(0.2, 2.2, 2.2), look: new THREE.Vector3(0, 2.0, -7.5) }
-    };
-    let activeView = "front";
-    const desiredPos = cameraViews.front.pos.clone();
-    const desiredLook = cameraViews.front.look.clone();
-    const currentLook = desiredLook.clone();
-    camera.position.copy(desiredPos);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    scene.add(new THREE.HemisphereLight(0xfff7ea, 0x364256, 2.5));
-    const key = new THREE.DirectionalLight(0xffe1b4, 2.3);
-    key.position.set(4, 8, 7);
-    key.castShadow = true;
-    scene.add(key);
-
-    const portalLight = new THREE.PointLight(0x2c79d8, 13, 18, 1.8);
-    portalLight.position.set(0, 3.2, 2.5);
-    scene.add(portalLight);
-
-    const warmHall = new THREE.PointLight(0xffd7a0, 9, 18, 2);
-    warmHall.position.set(0, 3.6, -5.5);
-    scene.add(warmHall);
-
-    const group = new THREE.Group();
-    scene.add(group);
-
-    const marble = new THREE.MeshPhysicalMaterial({
-      color: 0xd3ccc5,
-      roughness: 0.26,
-      metalness: 0.02,
-      clearcoat: 0.35,
-      clearcoatRoughness: 0.2
-    });
-    const wallMat = new THREE.MeshStandardMaterial({ color: 0xc9c1b9, roughness: 0.72 });
-    const frameMat = new THREE.MeshStandardMaterial({ color: 0x393532, roughness: 0.28, metalness: 0.62 });
-    const chromeMat = new THREE.MeshStandardMaterial({ color: 0xa9adb1, roughness: 0.2, metalness: 0.9 });
-
-    const floor = new THREE.Mesh(new THREE.BoxGeometry(13.5, 0.12, 18), marble);
-    floor.position.set(0, -0.08, -1.5);
-    floor.receiveShadow = true;
-    group.add(floor);
-
-    const ceiling = new THREE.Mesh(new THREE.BoxGeometry(13.5, 0.15, 13), new THREE.MeshStandardMaterial({ color: 0xe7e1db, roughness: 0.7 }));
-    ceiling.position.set(0, 4.55, -0.7);
-    group.add(ceiling);
-
-    const leftWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4.6, 12), wallMat);
-    leftWall.position.set(-6.6, 2.25, -0.8);
-    group.add(leftWall);
-    const rightWall = leftWall.clone();
-    rightWall.position.x = 6.6;
-    group.add(rightWall);
-
-    // Recessed hotel ceiling lights.
-    for (const x of [-4.8, -2.4, 0, 2.4, 4.8]) {
-      for (const z of [3.8, 0.3, -3.2]) {
-        const light = new THREE.PointLight(0xfff3d8, 2.8, 5.2, 2.2);
-        light.position.set(x, 4.35, z);
-        scene.add(light);
-        const trim = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.04, 20), chromeMat);
-        trim.rotation.x = Math.PI / 2;
-        trim.position.set(x, 4.43, z);
-        group.add(trim);
-      }
+    if (archStage) {
+      archStage.classList.add("mode-transition");
+      archStage.dataset.mode = mode;
+      setTimeout(() => archStage.classList.remove("mode-transition"), 280);
     }
 
-    const createScreenTexture = (kind) => {
-      const c = document.createElement("canvas");
-      c.width = kind === "top" ? 1600 : 620;
-      c.height = kind === "top" ? 360 : 1200;
-      const ctx = c.getContext("2d");
-      const texture = new THREE.CanvasTexture(c);
-      texture.colorSpace = THREE.SRGBColorSpace;
-      return { canvas: c, ctx, texture };
-    };
-
-    const topScreen = createScreenTexture("top");
-    const leftScreen = createScreenTexture("side");
-    const rightScreen = createScreenTexture("side");
-    let motionMode = "institutional";
-    let campaignColor = "#0b4fa8";
-
-    const paintScreen = (screen, title, subtitle, accent, vertical = false, qr = false) => {
-      const { canvas:c, ctx } = screen;
-      const g = ctx.createLinearGradient(0, 0, c.width, c.height);
-      g.addColorStop(0, "#061f4d");
-      g.addColorStop(0.58, campaignColor);
-      g.addColorStop(1, "#092b5f");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, c.width, c.height);
-
-      ctx.fillStyle = accent;
-      ctx.globalAlpha = 0.9;
-      for (let i=0;i<8;i++) {
-        ctx.fillRect((i*193)%c.width, (i*137)%c.height, vertical?10:34, vertical?190:10);
-      }
-      ctx.globalAlpha = 1;
-
-      if (qr) {
-        const size = Math.min(c.width, c.height) * 0.42;
-        const ox = (c.width-size)/2;
-        const oy = vertical ? c.height*0.15 : (c.height-size)/2;
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(ox-20,oy-20,size+40,size+40);
-        ctx.fillStyle = "#071f4b";
-        const cells = 17;
-        const cell = size/cells;
-        for(let y=0;y<cells;y++){
-          for(let x=0;x<cells;x++){
-            if(((x*7+y*11+x*y)%5)<2 || (x<4&&y<4) || (x>12&&y<4) || (x<4&&y>12)){
-              ctx.fillRect(ox+x*cell,oy+y*cell,cell*0.9,cell*0.9);
-            }
-          }
-        }
-      }
-
-      ctx.textAlign = "center";
-      ctx.fillStyle = "#ffffff";
-      ctx.font = vertical ? "900 58px Arial" : "900 70px Arial";
-      ctx.fillText(title, c.width/2, vertical ? c.height*0.68 : c.height*0.47);
-      ctx.fillStyle = accent;
-      ctx.font = vertical ? "800 27px Arial" : "800 31px Arial";
-      ctx.fillText(subtitle, c.width/2, vertical ? c.height*0.74 : c.height*0.62);
-      screen.texture.needsUpdate = true;
-    };
-
-    const updateScreens = (mode) => {
-      motionMode = mode;
-      setFallbackMode(mode);
-      const gold = "#e3bb45";
-      if (mode === "welcome") {
-        paintScreen(topScreen, "BIENVENIDOS · SVU 2027", "CONGRESO VENEZOLANO DE UROLOGÍA", gold, false);
-        paintScreen(leftScreen, "BIENVENIDOS", "ACCESO AL CONGRESO", gold, true);
-        paintScreen(rightScreen, "CARACAS", "HOTEL EUROBUILDING", gold, true);
-      } else if (mode === "sponsor") {
-        paintScreen(topScreen, "SU MARCA × SVU 2027", "PATROCINIO DEL ACCESO PRINCIPAL", gold, false);
-        paintScreen(leftScreen, "SU MARCA", "ALTO IMPACTO", gold, true);
-        paintScreen(rightScreen, "PATROCINANTE", "PRESENCIA PREMIUM", gold, true);
-      } else if (mode === "registration") {
-        paintScreen(topScreen, "REGISTRO Y ACCESO", "ESCANEE EL CÓDIGO PARA INGRESAR", gold, false);
-        paintScreen(leftScreen, "QR", "REGÍSTRESE AQUÍ", gold, true, true);
-        paintScreen(rightScreen, "ACCESO", "VALIDACIÓN DIGITAL", gold, true);
-      } else if (mode === "agenda") {
-        paintScreen(topScreen, "PRÓXIMA ACTIVIDAD", "PROGRAMA EN VIVO · CONSULTE SOVEURO APP", gold, false);
-        paintScreen(leftScreen, "AGENDA", "PRÓXIMA SESIÓN", gold, true);
-        paintScreen(rightScreen, "SVU 2027", "PROGRAMA EN VIVO", gold, true);
-      } else {
-        paintScreen(topScreen, "SVU 2027", "SOCIEDAD VENEZOLANA DE UROLOGÍA", gold, false);
-        paintScreen(leftScreen, "SVU", "CIENCIA", gold, true);
-        paintScreen(rightScreen, "2027", "CONEXIONES · IMPACTO", gold, true);
-      }
-    };
-
-    const screenMaterial = (texture) => new THREE.MeshStandardMaterial({
-      map:texture,
-      emissiveMap:texture,
-      emissive:new THREE.Color(0x0b4fa8),
-      emissiveIntensity:1.2,
-      roughness:0.16
-    });
-
-    // Portal frame inspired by the photographed entrance.
-    const topFrame = new THREE.Mesh(new THREE.BoxGeometry(7.9, 0.36, 0.42), frameMat);
-    topFrame.position.set(0, 4.0, 0);
-    group.add(topFrame);
-
-    const leftColumn = new THREE.Mesh(new THREE.BoxGeometry(1.2, 4.1, 0.55), frameMat);
-    leftColumn.position.set(-3.35, 2.0, 0);
-    group.add(leftColumn);
-    const rightColumn = leftColumn.clone();
-    rightColumn.position.x = 3.35;
-    group.add(rightColumn);
-
-    const topDisplay = new THREE.Mesh(new THREE.PlaneGeometry(6.7, 1.02), screenMaterial(topScreen.texture));
-    topDisplay.position.set(0, 3.55, 0.31);
-    group.add(topDisplay);
-
-    const leftDisplay = new THREE.Mesh(new THREE.PlaneGeometry(1.02, 3.45), screenMaterial(leftScreen.texture));
-    leftDisplay.position.set(-3.34, 2.0, 0.31);
-    group.add(leftDisplay);
-    const rightDisplay = new THREE.Mesh(new THREE.PlaneGeometry(1.02, 3.45), screenMaterial(rightScreen.texture));
-    rightDisplay.position.set(3.34, 2.0, 0.31);
-    group.add(rightDisplay);
-
-    // Open doorway and deeper commercial area.
-    const backWall = new THREE.Mesh(new THREE.BoxGeometry(11.5, 4.8, 0.2), new THREE.MeshStandardMaterial({ color:0xa99f96, roughness:0.7 }));
-    backWall.position.set(0,2.35,-9.5);
-    group.add(backWall);
-
-    const innerFloor = new THREE.Mesh(new THREE.BoxGeometry(9.6,0.11,8.2), marble);
-    innerFloor.position.set(0,-0.02,-5.3);
-    group.add(innerFloor);
-
-    // Registration table and people for scale.
-    const tableTop = new THREE.Mesh(new THREE.CylinderGeometry(0.68,0.68,0.08,28), chromeMat);
-    tableTop.position.set(1.05,1.05,-1.8);
-    group.add(tableTop);
-    const tableStem = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.16,1.05,18), chromeMat);
-    tableStem.position.set(1.05,0.52,-1.8);
-    group.add(tableStem);
-
-    const humanMat = new THREE.MeshStandardMaterial({ color:0x243247, roughness:0.72 });
-    const skinMat = new THREE.MeshStandardMaterial({ color:0xb9856d, roughness:0.82 });
-    const addPerson=(x,z,s=1)=>{
-      const p=new THREE.Group();
-      const body=new THREE.Mesh(new THREE.CylinderGeometry(.2*s,.29*s,1.25*s,14),humanMat);
-      body.position.y=.9*s; p.add(body);
-      const head=new THREE.Mesh(new THREE.SphereGeometry(.2*s,16,12),skinMat);
-      head.position.y=1.68*s; p.add(head);
-      p.position.set(x,0,z); group.add(p);
-    };
-    addPerson(-1.15,-1.25,.9);
-    addPerson(0,-2.2,.88);
-    addPerson(2.1,-1.0,.92);
-
-    // Queue stanchions.
-    for (const x of [-2.1,2.1]) {
-      for (const z of [1.0,-0.7]) {
-        const post = new THREE.Mesh(new THREE.CylinderGeometry(.07,.09,1.0,18), chromeMat);
-        post.position.set(x,.5,z); group.add(post);
-        const ball = new THREE.Mesh(new THREE.SphereGeometry(.11,14,10), chromeMat);
-        ball.position.set(x,1.03,z); group.add(ball);
-      }
-    }
-
-    updateScreens("institutional");
+    if (archModeLabel) archModeLabel.textContent = config.label;
+    if (archTopTitle) archTopTitle.textContent = config.topTitle;
+    if (archTopSubtitle) archTopSubtitle.textContent = config.topSubtitle;
+    if (archLeftTitle) archLeftTitle.textContent = config.leftTitle;
+    if (archLeftSubtitle) archLeftSubtitle.textContent = config.leftSubtitle;
+    if (archRightTitle) archRightTitle.textContent = config.rightTitle;
+    if (archRightSubtitle) archRightSubtitle.textContent = config.rightSubtitle;
+    if (archQr) archQr.hidden = !config.qr;
 
     $$(".motion-mode").forEach((button) => {
-      button.addEventListener("click", () => {
-        $$(".motion-mode").forEach((item) => item.classList.remove("active"));
-        button.classList.add("active");
-        updateScreens(button.dataset.motion || "institutional");
-      });
+      button.classList.toggle("active", button.dataset.motion === mode);
     });
+  };
 
-    $$(".camera-mode").forEach((button) => {
-      button.addEventListener("click", () => {
-        $$(".camera-mode").forEach((item) => item.classList.remove("active"));
-        button.classList.add("active");
-        activeView = button.dataset.camera || "front";
-        desiredPos.copy(cameraViews[activeView].pos);
-        desiredLook.copy(cameraViews[activeView].look);
-      });
+  $$(".motion-mode").forEach((button) => {
+    button.addEventListener("click", () => applyArchMode(button.dataset.motion || "welcome"));
+  });
+
+  $$(".theme-dot").forEach((button) => {
+    button.addEventListener("click", () => {
+      const color = button.dataset.color || "#0b4fa8";
+      archStage?.style.setProperty("--arch-campaign", color);
+      $$(".theme-dot").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
     });
+  });
 
-    $$(".theme-dot").forEach((button) => {
-      button.addEventListener("click", () => {
-        campaignColor = button.dataset.color || "#0b4fa8";
-        portalLight.color.set(campaignColor);
-        updateScreens(motionMode);
-      });
-    });
+  const demoButton = $("#startTunnelDemo");
+  const demoStatus = $("#demoStatus");
+  const demoSteps = $$(".demo-timeline [data-step]");
 
-    // Automatic sales demo.
-    const demoButton = $("#startTunnelDemo");
-    const demoStatus = $("#demoStatus");
-    const demoSteps = $$(".demo-timeline [data-step]");
-    let demoTimers = [];
-    let demoRunning = false;
+  const setArchDemoStep = (step) => {
+    demoSteps.forEach((item, index) => item.classList.toggle("active", index === step));
+  };
 
-    const setStep = (step) => demoSteps.forEach((item,i)=>item.classList.toggle("active",i===step));
-    const selectMotion = (mode) => document.querySelector(`.motion-mode[data-motion="${mode}"]`)?.click();
-    const selectCamera = (mode) => document.querySelector(`.camera-mode[data-camera="${mode}"]`)?.click();
-
-    const stopDemo = (finished=false) => {
-      demoTimers.forEach(clearTimeout);
-      demoTimers=[];
-      demoRunning=false;
-      if (demoButton) demoButton.textContent="▶ Iniciar demostración automática";
-      if (demoStatus) demoStatus.textContent=finished
+  const stopArchDemo = (finished = false) => {
+    archDemoTimers.forEach(clearTimeout);
+    archDemoTimers = [];
+    archDemoRunning = false;
+    if (demoButton) demoButton.textContent = "▶ Iniciar demostración automática";
+    if (demoStatus) {
+      demoStatus.textContent = finished
         ? "Demostración finalizada · puede repetirla o cambiar los contenidos manualmente."
         : "Demostración detenida · los controles manuales siguen disponibles.";
-    };
-    const later=(ms,fn)=>demoTimers.push(setTimeout(fn,ms));
-    const startDemo=()=>{
-      if(demoRunning){ stopDemo(false); return; }
-      demoRunning=true;
-      if(demoButton) demoButton.textContent="■ Detener demostración";
-      if(demoStatus) demoStatus.textContent="Demostración en curso · institucional → bienvenida → patrocinante → registro → agenda.";
+    }
+  };
 
-      setStep(0); selectMotion("institutional"); selectCamera("front");
-      later(3200,()=>{setStep(1);selectMotion("welcome");selectCamera("front");});
-      later(6500,()=>{setStep(2);selectMotion("sponsor");selectCamera("left");});
-      later(9900,()=>{setStep(3);selectMotion("registration");selectCamera("front");});
-      later(13300,()=>{setStep(4);selectMotion("agenda");selectCamera("inside");});
-      later(17000,()=>stopDemo(true));
-    };
-    demoButton?.addEventListener("click",startDemo);
+  const scheduleArchDemo = (delay, fn) => {
+    archDemoTimers.push(setTimeout(fn, delay));
+  };
 
-    let dragging=false, previousX=0, orbit=0;
-    canvas.addEventListener("pointerdown",(e)=>{dragging=true;previousX=e.clientX;canvas.setPointerCapture?.(e.pointerId);});
-    canvas.addEventListener("pointerup",(e)=>{dragging=false;canvas.releasePointerCapture?.(e.pointerId);});
-    canvas.addEventListener("pointerleave",()=>dragging=false);
-    canvas.addEventListener("pointermove",(e)=>{
-      if(!dragging)return;
-      orbit=THREE.MathUtils.clamp(orbit-(e.clientX-previousX)*0.012,-1.25,1.25);
-      previousX=e.clientX;
+  const startArchDemo = () => {
+    if (archDemoRunning) {
+      stopArchDemo(false);
+      return;
+    }
+
+    archDemoRunning = true;
+    if (demoButton) demoButton.textContent = "■ Detener demostración";
+    if (demoStatus) demoStatus.textContent = "Demostración en curso · bienvenida → institucional → patrocinante → registro → agenda.";
+
+    const sequence = [
+      ["welcome", 0],
+      ["institutional", 3200],
+      ["sponsor", 6500],
+      ["registration", 9800],
+      ["agenda", 13200]
+    ];
+
+    sequence.forEach(([mode, delay], index) => {
+      scheduleArchDemo(delay, () => {
+        setArchDemoStep(index);
+        applyArchMode(mode);
+      });
     });
 
-    const clock = new THREE.Clock();
-    const animate=()=>{
-      requestAnimationFrame(animate);
-      const t=clock.getElapsedTime();
-      const target=desiredPos.clone();
-      target.x += orbit;
-      camera.position.lerp(target,0.065);
-      currentLook.lerp(desiredLook,0.07);
-      camera.lookAt(currentLook);
-      if (!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
-        group.rotation.y = Math.sin(t*.35)*.008;
-      }
-      renderer.render(scene,camera);
-      archStage?.classList.add("three-ready");
-    };
-    animate();
+    scheduleArchDemo(17000, () => stopArchDemo(true));
+  };
 
-    const resize=()=>{
-      const w=Math.max(canvas.clientWidth,1), h=Math.max(canvas.clientHeight,1);
-      camera.aspect=w/h; camera.updateProjectionMatrix();
-      renderer.setSize(w,h,false);
-    };
-    window.addEventListener("resize",resize);
-  }
+  demoButton?.addEventListener("click", startArchDemo);
+
+  applyArchMode("welcome");
 })();
